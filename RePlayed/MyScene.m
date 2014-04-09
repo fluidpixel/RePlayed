@@ -47,26 +47,32 @@
 	SKLabelNode* loading = (SKLabelNode*)[self childNodeWithName:@"loading"];
 	[loading removeFromParent];
 	
-	SKSpriteNode *team1 = [self labelNodeFromString:dataParser.team1.name];
-	
-	team1.position = CGPointMake(self.size.width/2 - team1.size.width - 10, self.size.height - 40);
+	SKSpriteNode *team1 = [self labelNodeFromString:dataParser.team1.name andSize:12];
+	team1.position = CGPointMake(self.size.width/2 - team1.size.width - 20, self.size.height - 40);
 	[self addChild:team1];
 	
-	SKSpriteNode *team2 = [self labelNodeFromString:dataParser.team2.name];
-	
-	team2.position = CGPointMake(self.size.width/2 + 10, self.size.height - 40);
+	SKSpriteNode *team2 = [self labelNodeFromString:dataParser.team2.name andSize:12];
+	team2.position = CGPointMake(self.size.width/2 + 20, self.size.height - 40);
 	[self addChild:team2];
 	
-	SKSpriteNode* vs = [self labelNodeFromString:@"VS"];
-	vs.position = CGPointMake(self.size.width/2 - vs.size.width/2, self.size.height - 40);
+	SKSpriteNode* vs = [self labelNodeFromString:@"VS" andSize:18];
+	vs.position = CGPointMake(self.size.width/2 - vs.size.width/2, self.size.height - 60);
 	[self addChild:vs];
+	
+	SKSpriteNode* score1 = [self labelNodeFromString:dataParser.team1.score andSize:26];
+	score1.position = CGPointMake(self.size.width/2 - score1.size.width - 40, self.size.height - 70);
+	[self addChild:score1];
+
+	SKSpriteNode* score2 = [self labelNodeFromString:dataParser.team2.score andSize:26];
+	score2.position = CGPointMake(self.size.width/2 + 40, self.size.height - 70);
+	[self addChild:score2];
 }
 
--(SKSpriteNode*)labelNodeFromString:(NSString*)string
+-(SKSpriteNode*)labelNodeFromString:(NSString*)string andSize:(int)size
 {
 	
 	SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"Avenir-Heavy"];
-	label.fontSize = 12;
+	label.fontSize = size;
 	label.text = string;
 	label.position = CGPointMake(label.frame.size.width / 2, 0);
 	
