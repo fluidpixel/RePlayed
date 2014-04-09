@@ -12,5 +12,10 @@
 @interface MyScene : SKScene
 {
 	DataParser* dataParser;
+	int runningTime;
+	NSTimer* gameTimer;
+	
+	int nextEventIndex;
+	int matchTime;
 }
 @end

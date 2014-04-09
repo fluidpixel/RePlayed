@@ -34,6 +34,7 @@
 		54F5097C18F58B62006A17E8 /* BookingEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5097B18F58B62006A17E8 /* BookingEvent.m */; };
 		54F5097F18F58DE9006A17E8 /* SubstituteEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5097E18F58DE9006A17E8 /* SubstituteEvent.m */; };
 		54F5098218F58E64006A17E8 /* GoalEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5098118F58E64006A17E8 /* GoalEvent.m */; };
+		54F5098518F5F281006A17E8 /* pitch.png in Resources */ = {isa = PBXBuildFile; fileRef = 54F5098418F5F281006A17E8 /* pitch.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 		54F5097E18F58DE9006A17E8 /* SubstituteEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubstituteEvent.m; sourceTree = "<group>"; };
 		54F5098018F58E63006A17E8 /* GoalEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoalEvent.h; sourceTree = "<group>"; };
 		54F5098118F58E64006A17E8 /* GoalEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoalEvent.m; sourceTree = "<group>"; };
+		54F5098418F5F281006A17E8 /* pitch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pitch.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +150,7 @@
 		54F5093218F494BF006A17E8 /* RePlayed */ = {
 			isa = PBXGroup;
 			children = (
+				54F5098318F5F281006A17E8 /* assets */,
 				54F5093B18F494BF006A17E8 /* AppDelegate.h */,
 				54F5093C18F494BF006A17E8 /* AppDelegate.m */,
 				54F5093E18F494BF006A17E8 /* Main_iPhone.storyboard */,
@@ -214,6 +217,14 @@
 				54F5097218F49602006A17E8 /* Player.m */,
 			);
 			name = Data;
+			sourceTree = "<group>";
+		};
+		54F5098318F5F281006A17E8 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				54F5098418F5F281006A17E8 /* pitch.png */,
+			);
+			path = assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -296,6 +307,7 @@
 				54F5096C18F4950A006A17E8 /* optaPlayers.xml in Resources */,
 				54F5096B18F4950A006A17E8 /* playground.opta.xml in Resources */,
 				54F5094D18F494BF006A17E8 /* Images.xcassets in Resources */,
+				54F5098518F5F281006A17E8 /* pitch.png in Resources */,
 				54F5094318F494BF006A17E8 /* Main_iPad.storyboard in Resources */,
 				54F5094018F494BF006A17E8 /* Main_iPhone.storyboard in Resources */,
 				54F5093718F494BF006A17E8 /* InfoPlist.strings in Resources */,
