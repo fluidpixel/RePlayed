@@ -29,6 +29,11 @@
 		54F5096C18F4950A006A17E8 /* optaPlayers.xml in Resources */ = {isa = PBXBuildFile; fileRef = 54F5096A18F4950A006A17E8 /* optaPlayers.xml */; };
 		54F5097018F49530006A17E8 /* DataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5096F18F49530006A17E8 /* DataParser.m */; };
 		54F5097318F49602006A17E8 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5097218F49602006A17E8 /* Player.m */; };
+		54F5097618F55BBA006A17E8 /* Team.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5097518F55BBA006A17E8 /* Team.m */; };
+		54F5097918F58B2C006A17E8 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5097818F58B2C006A17E8 /* Event.m */; };
+		54F5097C18F58B62006A17E8 /* BookingEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5097B18F58B62006A17E8 /* BookingEvent.m */; };
+		54F5097F18F58DE9006A17E8 /* SubstituteEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5097E18F58DE9006A17E8 /* SubstituteEvent.m */; };
+		54F5098218F58E64006A17E8 /* GoalEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5098118F58E64006A17E8 /* GoalEvent.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +77,16 @@
 		54F5096F18F49530006A17E8 /* DataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataParser.m; sourceTree = "<group>"; };
 		54F5097118F49602006A17E8 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		54F5097218F49602006A17E8 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
+		54F5097418F55BBA006A17E8 /* Team.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Team.h; sourceTree = "<group>"; };
+		54F5097518F55BBA006A17E8 /* Team.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Team.m; sourceTree = "<group>"; };
+		54F5097718F58B2C006A17E8 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		54F5097818F58B2C006A17E8 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
+		54F5097A18F58B62006A17E8 /* BookingEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookingEvent.h; sourceTree = "<group>"; };
+		54F5097B18F58B62006A17E8 /* BookingEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookingEvent.m; sourceTree = "<group>"; };
+		54F5097D18F58DE9006A17E8 /* SubstituteEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubstituteEvent.h; sourceTree = "<group>"; };
+		54F5097E18F58DE9006A17E8 /* SubstituteEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubstituteEvent.m; sourceTree = "<group>"; };
+		54F5098018F58E63006A17E8 /* GoalEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoalEvent.h; sourceTree = "<group>"; };
+		54F5098118F58E64006A17E8 /* GoalEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoalEvent.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +200,16 @@
 				54F5096A18F4950A006A17E8 /* optaPlayers.xml */,
 				54F5096E18F49530006A17E8 /* DataParser.h */,
 				54F5096F18F49530006A17E8 /* DataParser.m */,
+				54F5097718F58B2C006A17E8 /* Event.h */,
+				54F5097818F58B2C006A17E8 /* Event.m */,
+				54F5098018F58E63006A17E8 /* GoalEvent.h */,
+				54F5098118F58E64006A17E8 /* GoalEvent.m */,
+				54F5097A18F58B62006A17E8 /* BookingEvent.h */,
+				54F5097B18F58B62006A17E8 /* BookingEvent.m */,
+				54F5097D18F58DE9006A17E8 /* SubstituteEvent.h */,
+				54F5097E18F58DE9006A17E8 /* SubstituteEvent.m */,
+				54F5097418F55BBA006A17E8 /* Team.h */,
+				54F5097518F55BBA006A17E8 /* Team.m */,
 				54F5097118F49602006A17E8 /* Player.h */,
 				54F5097218F49602006A17E8 /* Player.m */,
 			);
@@ -292,11 +317,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54F5097C18F58B62006A17E8 /* BookingEvent.m in Sources */,
 				54F5094918F494BF006A17E8 /* MyScene.m in Sources */,
+				54F5097F18F58DE9006A17E8 /* SubstituteEvent.m in Sources */,
+				54F5098218F58E64006A17E8 /* GoalEvent.m in Sources */,
 				54F5094618F494BF006A17E8 /* ViewController.m in Sources */,
 				54F5093D18F494BF006A17E8 /* AppDelegate.m in Sources */,
 				54F5097018F49530006A17E8 /* DataParser.m in Sources */,
+				54F5097918F58B2C006A17E8 /* Event.m in Sources */,
 				54F5097318F49602006A17E8 /* Player.m in Sources */,
+				54F5097618F55BBA006A17E8 /* Team.m in Sources */,
 				54F5093918F494BF006A17E8 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
