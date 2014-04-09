@@ -25,8 +25,17 @@
 	NSMutableString* elementString;
 	
 	BOOL firstTeam;
+	
+	BOOL complete;
 }
+
+@property (nonatomic, retain) NSMutableArray* eventArray;
+@property (nonatomic, retain) Team* team1;
+@property (nonatomic, retain) Team* team2;
+@property (nonatomic, assign) BOOL complete;
+
 -(void)loadPlayerData;
 
++ (id)sharedData;
 
 @end

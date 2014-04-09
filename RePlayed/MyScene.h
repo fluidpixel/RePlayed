@@ -7,7 +7,10 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "DataParser.h"
 
 @interface MyScene : SKScene
-
+{
+	DataParser* dataParser;
+}
 @end

@@ -11,7 +11,23 @@
 #import "Team.h"
 #import "Event.h"
 
+#import "ViewController.h"
+
 @implementation DataParser
+
+@synthesize team1;
+@synthesize team2;
+@synthesize eventArray;
+@synthesize complete;
+
++ (id)sharedData {
+    static DataParser *sharedData = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedData = [[self alloc] init];
+    });
+    return sharedData;
+}
 
 -(void)loadPlayerData
 {
@@ -32,9 +48,9 @@
     // now parse the document
     BOOL ok = [xmlParser parse];
     if (ok == NO)
-        NSLog(@"error");
+        NSLog(@"Parse Error");
     else
-        NSLog(@"OK");
+        NSLog(@"Parse OK");
     
 }
 
@@ -57,26 +73,30 @@
 	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
 	eventArray = [NSMutableArray arrayWithArray:[eventArray sortedArrayUsingDescriptors:sortDescriptors]];
 	
-	NSLog(@"events %@", eventArray);
+	complete = TRUE;
+	
+	//NSLog(@"events %@", eventArray);
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"finishedParsing" object:nil];
 }
 
 -(void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-    NSLog(@"didStartElement: %@", elementName);
-    
-    if (namespaceURI != nil)
-        NSLog(@"namespace: %@", namespaceURI);
-    
-    if (qName != nil)
-        NSLog(@"qualifiedName: %@", qName);
-    
-    // print all attributes for this element
-    NSEnumerator *attribs = [attributeDict keyEnumerator];
-    NSString *key, *value;
-    
-    while((key = [attribs nextObject]) != nil) {
-        value = [attributeDict objectForKey:key];
-        NSLog(@"  attribute: %@ = %@", key, value);
-    }
+//    NSLog(@"didStartElement: %@", elementName);
+//    
+//    if (namespaceURI != nil)
+//        NSLog(@"namespace: %@", namespaceURI);
+//    
+//    if (qName != nil)
+//        NSLog(@"qualifiedName: %@", qName);
+//    
+//    // print all attributes for this element
+//    NSEnumerator *attribs = [attributeDict keyEnumerator];
+//    NSString *key, *value;
+//    
+//    while((key = [attribs nextObject]) != nil) {
+//        value = [attributeDict objectForKey:key];
+//        NSLog(@"  attribute: %@ = %@", key, value);
+//    }
 	
 	if ([elementName isEqualToString:@"TeamData"])
 	{
@@ -232,7 +252,7 @@
 
 -(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
 {
-    NSLog(@"didEndElement: %@", elementName);
+    //NSLog(@"didEndElement: %@", elementName);
 	
 	if([elementName isEqualToString:@"First"])
 	{

@@ -15,6 +15,4 @@
 	return [NSString stringWithFormat:@"<Event: %p, time: %02i period: %@ type: %@ team: %@", self, [self.time intValue], [self.period stringByPaddingToLength:10 withString:@" " startingAtIndex:0], [self.type stringByPaddingToLength:12 withString:@" " startingAtIndex:0], self.team.name];
 }
 
-
-
 @end

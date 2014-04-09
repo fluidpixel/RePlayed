@@ -16,21 +16,24 @@
 {
     [super viewDidLoad];
 
-    // Configure the view.
-    SKView * skView = (SKView *)self.view;
+	DataParser *dataParser = [DataParser sharedData];
+	[dataParser loadPlayerData];
+	
+    // Present the scene.
+    [self presentScene];
+}
+
+-(void)presentScene
+{
+	// Configure the view.
+    SKView* skView = (SKView *)self.view;
     skView.showsFPS = YES;
     skView.showsNodeCount = YES;
     
     // Create and configure the scene.
     SKScene * scene = [MyScene sceneWithSize:skView.bounds.size];
     scene.scaleMode = SKSceneScaleModeAspectFill;
-    
-	DataParser* dataParser =  [[DataParser alloc] init];
-	
-	[dataParser loadPlayerData];
-	
-    // Present the scene.
-    [skView presentScene:scene];
+	[skView presentScene:scene];
 }
 
 - (BOOL)shouldAutorotate
