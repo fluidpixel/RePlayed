@@ -189,10 +189,12 @@
 	{
 		if([team1.teamRef isEqualToString:[attributeDict objectForKey:@"uID"]])
 		{
+			currentTeam = team1;
 			firstTeam = TRUE;
 		}
 		else if([team2.teamRef isEqualToString:[attributeDict objectForKey:@"uID"]])
 		{
+			currentTeam = team2;
 			firstTeam = FALSE;
 		}
 	}
@@ -245,6 +247,10 @@
 		{
 			currentPlayer.lastName = elementString;
 		}
+	}
+	else if ([elementName isEqualToString:@"Name"])
+	{
+		currentTeam.name = elementString;
 	}
 		
 	elementString = nil;
