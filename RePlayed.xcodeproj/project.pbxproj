@@ -25,6 +25,10 @@
 		54F5095618F494C0006A17E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54F5092E18F494BF006A17E8 /* UIKit.framework */; };
 		54F5095E18F494C0006A17E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 54F5095C18F494C0006A17E8 /* InfoPlist.strings */; };
 		54F5096018F494C0006A17E8 /* RePlayedTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5095F18F494C0006A17E8 /* RePlayedTests.m */; };
+		54F5096B18F4950A006A17E8 /* playground.opta.xml in Resources */ = {isa = PBXBuildFile; fileRef = 54F5096918F4950A006A17E8 /* playground.opta.xml */; };
+		54F5096C18F4950A006A17E8 /* optaPlayers.xml in Resources */ = {isa = PBXBuildFile; fileRef = 54F5096A18F4950A006A17E8 /* optaPlayers.xml */; };
+		54F5097018F49530006A17E8 /* DataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5096F18F49530006A17E8 /* DataParser.m */; };
+		54F5097318F49602006A17E8 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5097218F49602006A17E8 /* Player.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +66,12 @@
 		54F5095B18F494C0006A17E8 /* RePlayedTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RePlayedTests-Info.plist"; sourceTree = "<group>"; };
 		54F5095D18F494C0006A17E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		54F5095F18F494C0006A17E8 /* RePlayedTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RePlayedTests.m; sourceTree = "<group>"; };
+		54F5096918F4950A006A17E8 /* playground.opta.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = playground.opta.xml; sourceTree = "<group>"; };
+		54F5096A18F4950A006A17E8 /* optaPlayers.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = optaPlayers.xml; sourceTree = "<group>"; };
+		54F5096E18F49530006A17E8 /* DataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataParser.h; sourceTree = "<group>"; };
+		54F5096F18F49530006A17E8 /* DataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataParser.m; sourceTree = "<group>"; };
+		54F5097118F49602006A17E8 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		54F5097218F49602006A17E8 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +138,7 @@
 				54F5093E18F494BF006A17E8 /* Main_iPhone.storyboard */,
 				54F5094118F494BF006A17E8 /* Main_iPad.storyboard */,
 				54F5094418F494BF006A17E8 /* ViewController.h */,
+				54F5096D18F49510006A17E8 /* Data */,
 				54F5094518F494BF006A17E8 /* ViewController.m */,
 				54F5094718F494BF006A17E8 /* MyScene.h */,
 				54F5094818F494BF006A17E8 /* MyScene.m */,
@@ -165,6 +176,19 @@
 				54F5095C18F494C0006A17E8 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		54F5096D18F49510006A17E8 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				54F5096918F4950A006A17E8 /* playground.opta.xml */,
+				54F5096A18F4950A006A17E8 /* optaPlayers.xml */,
+				54F5096E18F49530006A17E8 /* DataParser.h */,
+				54F5096F18F49530006A17E8 /* DataParser.m */,
+				54F5097118F49602006A17E8 /* Player.h */,
+				54F5097218F49602006A17E8 /* Player.m */,
+			);
+			name = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,6 +268,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				54F5094B18F494BF006A17E8 /* Spaceship.png in Resources */,
+				54F5096C18F4950A006A17E8 /* optaPlayers.xml in Resources */,
+				54F5096B18F4950A006A17E8 /* playground.opta.xml in Resources */,
 				54F5094D18F494BF006A17E8 /* Images.xcassets in Resources */,
 				54F5094318F494BF006A17E8 /* Main_iPad.storyboard in Resources */,
 				54F5094018F494BF006A17E8 /* Main_iPhone.storyboard in Resources */,
@@ -269,6 +295,8 @@
 				54F5094918F494BF006A17E8 /* MyScene.m in Sources */,
 				54F5094618F494BF006A17E8 /* ViewController.m in Sources */,
 				54F5093D18F494BF006A17E8 /* AppDelegate.m in Sources */,
+				54F5097018F49530006A17E8 /* DataParser.m in Sources */,
+				54F5097318F49602006A17E8 /* Player.m in Sources */,
 				54F5093918F494BF006A17E8 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

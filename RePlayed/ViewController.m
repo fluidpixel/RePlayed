@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "MyScene.h"
+#import "DataParser.h"
 
 @implementation ViewController
 
@@ -24,6 +25,10 @@
     SKScene * scene = [MyScene sceneWithSize:skView.bounds.size];
     scene.scaleMode = SKSceneScaleModeAspectFill;
     
+	DataParser* dataParser =  [[DataParser alloc] init];
+	
+	[dataParser loadPlayerData];
+	
     // Present the scene.
     [skView presentScene:scene];
 }

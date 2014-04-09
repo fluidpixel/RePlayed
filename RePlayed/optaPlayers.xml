@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2001-2013 Opta Sportsdata Ltd. All rights reserved. -->
+
+<!-- PRODUCTION HEADER
+     produced on:        valde-jobq-b01.nexus.opta.net
+     production time:    20130328T152949,172Z
+     production module:  Opta::Feed::XML::Soccer::F7
+-->
+<SoccerFeed TimeStamp="20130328T152947+0000">
+  <SoccerDocument Type="Result" uID="f131897">
+    <Competition uID="c87">
+      <Country>Germany</Country>
+      <Name>German Bundesliga Zwei</Name>
+      <Stat Type="season_id">8</Stat>
+      <Stat Type="season_name">Season 2007/2008</Stat>
+      <Stat Type="symid">DE_BZ</Stat>
+      <Stat Type="matchday">1</Stat>
+    </Competition>
+    <MatchData>
+      <MatchInfo MatchType="Regular" Period="FullTime" TimeStamp="20070812T144737+0100" Weather="Windy">
+        <Attendance>20300</Attendance>
+        <Date>20070812T130000+0100</Date>
+        <Result Type="NormalResult" Winner="t810" />
+      </MatchInfo>
+      <MatchOfficial uID="o11068">
+        <OfficialData>
+          <OfficialRef Type="Main" />
+        </OfficialData>
+        <OfficialName>
+          <First>Dr. Helmut</First>
+          <Last>Fleischer</Last>
+        </OfficialName>
+      </MatchOfficial>
+      <Stat Type="match_time">91</Stat>
+      <TeamData Score="4" Side="Home" TeamRef="t810">
+        <Goal EventID="2113300494" EventNumber="152" Period="FirstHalf" PlayerRef="p11827" Time="5" TimeStamp="20070812T130428+0100" Type="Goal" uID="g810-1">
+          <Assist PlayerRef="p6627">p6627</Assist>
+        </Goal>
+        <Goal EventID="293795146" EventNumber="2553" Period="SecondHalf" PlayerRef="p20378" Time="55" TimeStamp="20070812T141136+0100" Type="Goal" uID="g810-2" />
+        <Goal EventID="508905823" EventNumber="2564" Period="SecondHalf" PlayerRef="p11827" Time="56" TimeStamp="20070812T141306+0100" Type="Goal" uID="g810-3">
+          <Assist PlayerRef="p19490">p19490</Assist>
+        </Goal>
+        <Goal EventID="1360106841" EventNumber="2725" Period="SecondHalf" PlayerRef="p20486" Time="72" TimeStamp="20070812T142844+0100" Type="Goal" uID="g810-4" />
+        <PlayerLineUp>
+          <MatchPlayer PlayerRef="p18193" Position="Goalkeeper" ShirtNumber="1" Status="Start" />
+          <MatchPlayer PlayerRef="p41452" Position="Defender" ShirtNumber="28" Status="Start" />
+          <MatchPlayer PlayerRef="p18257" Position="Defender" ShirtNumber="6" Status="Start" />
+          <MatchPlayer PlayerRef="p18196" Position="Defender" ShirtNumber="4" Status="Start" />
+          <MatchPlayer PlayerRef="p11827" Position="Midfielder" ShirtNumber="7" Status="Start" />
+          <MatchPlayer PlayerRef="p20379" Position="Midfielder" ShirtNumber="13" Status="Start" />
+          <MatchPlayer PlayerRef="p19490" Position="Midfielder" ShirtNumber="5" Status="Start" />
+          <MatchPlayer PlayerRef="p20856" Position="Striker" ShirtNumber="27" Status="Start" />
+          <MatchPlayer PlayerRef="p20378" Position="Striker" ShirtNumber="11" Status="Start" />
+          <MatchPlayer PlayerRef="p44739" Position="Striker" ShirtNumber="8" Status="Start" />
+          <MatchPlayer PlayerRef="p6627" Position="Striker" ShirtNumber="21" Status="Start" />
+          <MatchPlayer PlayerRef="p33057" Position="Substitute" ShirtNumber="9" Status="Sub" />
+          <MatchPlayer PlayerRef="p20485" Position="Substitute" ShirtNumber="24" Status="Sub" />
+          <MatchPlayer PlayerRef="p20486" Position="Substitute" ShirtNumber="3" Status="Sub" />
+          <MatchPlayer PlayerRef="p18195" Position="Substitute" ShirtNumber="29" Status="Sub" />
+          <MatchPlayer PlayerRef="p37614" Position="Substitute" ShirtNumber="25" Status="Sub" />
+          <MatchPlayer PlayerRef="p46033" Position="Substitute" ShirtNumber="33" Status="Sub" />
+          <MatchPlayer PlayerRef="p19507" Position="Substitute" ShirtNumber="31" Status="Sub" />
+        </PlayerLineUp>
+        <ShootOut>
+        </ShootOut>
+        <Substitution EventID="1073682046" EventNumber="2706" Period="2" Reason="Injury" SubOff="p20856" SubOn="p20486" SubstitutePosition="3" Time="70" TimeStamp="20070812T142641+0100" uID="s810-1" />
+        <Substitution EventID="1982078901" EventNumber="2767" Period="2" Reason="Tactical" SubOff="p20378" SubOn="p33057" SubstitutePosition="4" Time="76" TimeStamp="20070812T143223+0100" uID="s810-2" />
+        <Substitution EventID="2031157848" EventNumber="2758" Period="2" Reason="Tactical" SubOff="p6627" SubOn="p19507" SubstitutePosition="3" Time="75" TimeStamp="20070812T143159+0100" uID="s810-3" />
+        <TeamOfficial></TeamOfficial>
+      </TeamData>
+      <TeamData Score="1" Side="Away" TeamRef="t2012">
+        <Booking Card="Yellow" CardType="Yellow" EventID="944981550" EventNumber="2479" Period="SecondHalf" PlayerRef="p17839" Reason="Foul" Time="47" TimeStamp="20070812T140330+0100" uID="b2012-1" />
+        <Booking Card="Yellow" CardType="Yellow" EventID="520018572" EventNumber="26010" Period="SecondHalf" PlayerRef="p8987" Reason="Time wasting" Time="60" TimeStamp="20070812T141625+0100" uID="b2012-2" />
+        <Booking Card="Yellow" CardType="Yellow" EventID="294543363" EventNumber="28711" Period="SecondHalf" PlayerRef="p37583" Reason="Foul" Time="87" TimeStamp="20070812T144340+0100" uID="b2012-3" />
+        <Goal EventID="1995195640" EventNumber="14316" Period="FirstHalf" PlayerRef="p5064" Time="43" TimeStamp="20070812T134254+0100" Type="Goal" uID="g2012-1">
+          <Assist PlayerRef="p8987">p8987</Assist>
+        </Goal>
+        <PlayerLineUp>
+          <MatchPlayer PlayerRef="p14056" Position="Goalkeeper" ShirtNumber="1" Status="Start" />
+          <MatchPlayer PlayerRef="p21104" Position="Defender" ShirtNumber="24" Status="Start" />
+          <MatchPlayer PlayerRef="p20779" Position="Defender" ShirtNumber="8" Status="Start" />
+          <MatchPlayer PlayerRef="p12888" Position="Defender" ShirtNumber="22" Status="Start" />
+          <MatchPlayer PlayerRef="p9895" Position="Defender" ShirtNumber="3" Status="Start" />
+          <MatchPlayer PlayerRef="p17561" Position="Defender" ShirtNumber="5" Status="Start" />
+          <MatchPlayer PlayerRef="p5064" Position="Midfielder" ShirtNumber="10" Status="Start" />
+          <MatchPlayer PlayerRef="p40430" Position="Midfielder" ShirtNumber="13" Status="Start" />
+          <MatchPlayer PlayerRef="p17839" Position="Midfielder" ShirtNumber="21" Status="Start" />
+          <MatchPlayer PlayerRef="p26741" Position="Striker" ShirtNumber="15" Status="Start" />
+          <MatchPlayer PlayerRef="p8987" Position="Striker" ShirtNumber="11" Status="Start" />
+          <MatchPlayer PlayerRef="p25183" Position="Substitute" ShirtNumber="33" Status="Sub" />
+          <MatchPlayer PlayerRef="p37583" Position="Substitute" ShirtNumber="17" Status="Sub" />
+          <MatchPlayer PlayerRef="p17860" Position="Substitute" ShirtNumber="27" Status="Sub" />
+          <MatchPlayer PlayerRef="p37187" Position="Substitute" ShirtNumber="7" Status="Sub" />
+          <MatchPlayer PlayerRef="p4762" Position="Substitute" ShirtNumber="2" Status="Sub" />
+          <MatchPlayer PlayerRef="p42663" Position="Substitute" ShirtNumber="6" Status="Sub" />
+          <MatchPlayer PlayerRef="p25249" Position="Substitute" ShirtNumber="4" Status="Sub" />
+        </PlayerLineUp>
+        <ShootOut>
+        </ShootOut>
+        <Substitution EventID="1325227579" EventNumber="24517" Period="2" Reason="Tactical" SubOff="p9895" SubOn="p42663" SubstitutePosition="3" Time="45" TimeStamp="20070812T140219+0100" uID="s2012-1" />
+        <Substitution EventID="1696521385" EventNumber="26118" Period="2" Reason="Tactical" SubOff="p12888" SubOn="p37187" SubstitutePosition="3" Time="61" TimeStamp="20070812T141822+0100" uID="s2012-2" />
+        <Substitution EventID="1420899768" EventNumber="27819" Period="2" Reason="Tactical" SubOff="p26741" SubOn="p37583" SubstitutePosition="3" Time="78" TimeStamp="20070812T143456+0100" uID="s2012-3" />
+        <TeamOfficial></TeamOfficial>
+      </TeamData>
+    </MatchData>
+    <Team uID="t810">
+      <Country>Germany</Country>
+      <Name>1. FSV Mainz 05</Name>
+      <Player Position="Goalkeeper" uID="p18193">
+        <PersonName>
+          <First>Dimo</First>
+          <Last>Wache</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Defender" uID="p41452">
+        <PersonName>
+          <First>Neven</First>
+          <Last>Subotic</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Defender" uID="p18257">
+        <PersonName>
+          <First>Tim</First>
+          <Last>Hoogland</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Defender" uID="p18196">
+        <PersonName>
+          <First>Nikolce</First>
+          <Last>Noveski</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Midfielder" uID="p11827">
+        <PersonName>
+          <First>Markus</First>
+          <Last>Feulner</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Midfielder" uID="p20379">
+        <PersonName>
+          <First>Milorad</First>
+          <Last>Pekovic</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Midfielder" uID="p19490">
+        <PersonName>
+          <First>Christian</First>
+          <Last>Demirtas</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Striker" uID="p20856">
+        <PersonName>
+          <First>Daniel</First>
+          <Last>Gunkel</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Striker" uID="p20378">
+        <PersonName>
+          <First>Petr</First>
+          <Last>Ruman</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Striker" uID="p44739">
+        <PersonName>
+          <First>Srdjan</First>
+          <Last>Baljak</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Striker" uID="p6627">
+        <PersonName>
+          <First>Miroslav</First>
+          <Last>Karhan</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p33057">
+        <PersonName>
+          <First>Felix</First>
+          <Last>Borja</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p20485">
+        <PersonName>
+          <First>Stefan</First>
+          <Last>Markolf</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p20486">
+        <PersonName>
+          <First>Damir</First>
+          <Last>Vrancic</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p18195">
+        <PersonName>
+          <First>Christian</First>
+          <Last>Wetklo</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p37614">
+        <PersonName>
+          <First>Mario</First>
+          <Last>Vrancic</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p46033">
+        <PersonName>
+          <First>Nejmeddin</First>
+          <Last>Daghfous</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p19507">
+        <PersonName>
+          <First>Francis</First>
+          <Last>Laurent</Last>
+        </PersonName>
+      </Player>
+      <TeamOfficial Type="Manager" uID="man279">
+        <PersonName>
+          <First>Jürgen</First>
+          <Last>Klopp</Last>
+        </PersonName>
+      </TeamOfficial>
+    </Team>
+    <Team uID="t2012">
+      <Country>Germany</Country>
+      <Name>TuS Koblenz</Name>
+      <Player Position="Goalkeeper" uID="p14056">
+        <PersonName>
+          <First>Dennis</First>
+          <Last>Eilhoff</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Defender" uID="p21104">
+        <PersonName>
+          <First>Matej</First>
+          <Last>Mavric</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Defender" uID="p20779">
+        <PersonName>
+          <First>Martin</First>
+          <Last>Forkel</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Defender" uID="p12888">
+        <PersonName>
+          <First>Du-Ri</First>
+          <Last>Cha</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Defender" uID="p9895">
+        <PersonName>
+          <First>Frank</First>
+          <Last>Wiblishauser</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Defender" uID="p17561">
+        <PersonName>
+          <First>Branimir</First>
+          <Last>Bajic</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Midfielder" uID="p5064">
+        <PersonName>
+          <First>Anel</First>
+          <Last>Dzaka</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Midfielder" uID="p40430">
+        <PersonName>
+          <First>Marko</First>
+          <Last>Lomic</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Midfielder" uID="p17839">
+        <PersonName>
+          <First>Goran</First>
+          <Last>Sukalo</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Striker" uID="p26741">
+        <PersonName>
+          <First>Dragan</First>
+          <Last>Bogavac</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Striker" uID="p8987">
+        <PersonName>
+          <First>Fatmir</First>
+          <Last>Vata</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p25183">
+        <PersonName>
+          <First>Michael</First>
+          <Last>Gurski</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p37583">
+        <PersonName>
+          <First>Phillipp</First>
+          <Last>Langen</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p17860">
+        <PersonName>
+          <First>Kenan</First>
+          <Last>Sahin</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p37187">
+        <PersonName>
+          <First>Sascha</First>
+          <Last>Traut</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p4762">
+        <PersonName>
+          <First>Brenny</First>
+          <Last>Evers</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p42663">
+        <PersonName>
+          <First>Manuel</First>
+          <Last>Hartmann</Last>
+        </PersonName>
+      </Player>
+      <Player Position="Substitute" uID="p25249">
+        <PersonName>
+          <First>Rüdiger</First>
+          <Last>Ziehl</Last>
+        </PersonName>
+      </Player>
+      <TeamOfficial Type="Manager" uID="man278">
+        <PersonName>
+          <First>Uwe</First>
+          <Last>Rapolder</Last>
+        </PersonName>
+      </TeamOfficial>
+    </Team>
+    <Venue uID="v2158">
+      <Country>Germany</Country>
+      <Name>Stadion am Bruchweg</Name>
+    </Venue>
+  </SoccerDocument>
+</SoccerFeed>
