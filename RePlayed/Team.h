@@ -15,5 +15,6 @@
 @property (nonatomic, strong) NSString *score;
 @property (nonatomic, strong) NSString *side;
 @property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *teamId;
 
 @end

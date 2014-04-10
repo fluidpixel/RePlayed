@@ -9,6 +9,7 @@
 #import "MyScene.h"
 #import "DataParser.h"
 #import "Event.h"
+#import "GameEvent.h"
 
 @implementation MyScene
 
@@ -41,11 +42,15 @@
     }
 	
 	SKSpriteNode* pitch = [SKSpriteNode spriteNodeWithImageNamed:@"pitch"];
-	pitch.size = CGSizeMake(self.size.width - 40, self.size.height - 120);
-	pitch.position = CGPointMake(20, 10);
+	pitch.size = CGSizeMake(self.size.width - 0, self.size.height - 120);
+	pitch.position = CGPointMake(0, 10);
 	pitch.anchorPoint = CGPointZero;
 	pitch.zPosition = -1;
 	[self addChild:pitch];
+	
+	actionLayer = [[SKNode alloc] init];
+	actionLayer.name = @"actionLayer";
+	[self addChild:actionLayer];
 	
     return self;
 }
@@ -60,14 +65,20 @@
 	
 	runningTime = 0;
 	nextEventIndex = 0;
+	nextGameEventIndex = 0;
 	
-	matchTime = 91;
+	matchTime = 91*60;
 	SKSpriteNode* gameTimeLabel = [self labelNodeFromString:@"00:00" andSize:30];
 	gameTimeLabel.position = CGPointMake(self.size.width/2 - gameTimeLabel.size.width/2, self.size.height - 95);
 	gameTimeLabel.name = @"timeLabel";
 	[self addChild:gameTimeLabel];
 	
-	[self startTimer:nil];
+	SKSpriteNode* details = [self labelNodeFromString:@"Kick Off" andSize:18];
+	details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
+	details.name = @"eventLabel";
+	[self addChild:details];
+	
+	[self pauseGameFor:2.0];
 	
 }
 
@@ -76,9 +87,13 @@
 	runningTime ++;
 	
 	//pause timer for tempTimer time to "wait" for half time
-	if (runningTime == 45)
+	if (runningTime == (45 * 60))
 	{
 		[self pauseGameFor:2.0];
+		
+		//reset action grid
+		[[self childNodeWithName:@"actionLayer"] removeAllChildren];
+		
 		SKSpriteNode* details = [self labelNodeFromString:@"HALF TIME" andSize:18];
 		details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
 		details.name = @"eventLabel";
@@ -87,11 +102,106 @@
 	
 	[self populateLabelwithTime:runningTime];
 	
+	if(!gameEnded)
+	{
+		[self processBasicEvents];
+		[self processDetailedEvents];
+	}
+	
+	if (runningTime >= matchTime)
+	{
+		[self endGame];
+	}
+}
+
+-(void)processDetailedEvents
+{
+	GameEvent* nextGameEvent = [data.gameEventArray objectAtIndex:nextGameEventIndex];
+	
+	while(nextGameEvent.min == 0 && nextGameEvent.sec == 0)
+	{
+		if(nextGameEventIndex < data.gameEventArray.count-1)
+		{
+			nextGameEventIndex++;
+			nextGameEvent = [data.gameEventArray objectAtIndex:nextGameEventIndex];
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	int seconds = runningTime;
+	
+	int minutes = seconds / 60;
+    seconds -= minutes * 60;
+    seconds = floorf(seconds);
+	
+	while(minutes == nextGameEvent.min && seconds == nextGameEvent.sec)
+	{
+		//NSLog(@"event: %02i at %02i:%02i %.01f,%.01f", nextGameEvent.eventType, nextGameEvent.min, nextGameEvent.sec, nextGameEvent.posX, nextGameEvent.posY);
+		UIColor* color;
+		if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
+		{
+			color = [UIColor redColor];
+		}
+		else
+		{
+			color = [UIColor blueColor];
+		}
+		
+		[self addActionPointatPoint:[self createPointonPitch:nextGameEvent.posY and:nextGameEvent.posX] withColor:color];
+		
+		if (nextGameEventIndex < data.gameEventArray.count-1)
+		{
+			nextGameEventIndex++;
+			nextGameEvent = [data.gameEventArray objectAtIndex:nextGameEventIndex];
+		}
+		else
+		{
+			nextGameEvent = nil;
+			break;
+		}
+	}
+}
+
+-(CGPoint)createPointonPitch:(float)x and:(float)y
+{
+	float pitchWidth = self.size.width * 0.82;
+	float pitchHeight = self.size.height * 0.75;
+	float pitchXOffset = 28;
+	float pitchYOffset = 20;
+	
+	return CGPointMake(x * pitchWidth * 0.01 + pitchXOffset, y * pitchHeight * 0.01 + pitchYOffset);
+}
+
+-(void)addActionPointatPoint:(CGPoint)point withColor:(UIColor*)color
+{
+	SKSpriteNode* actionPoint = [SKSpriteNode spriteNodeWithColor:color size:CGSizeMake(4,4)];
+	actionPoint.position = point;
+	
+	NSArray* actionArray = [actionLayer children];
+	if(actionArray.count > 15)
+	{
+	   [[actionArray objectAtIndex:0] removeFromParent];
+	}
+	
+	[actionLayer addChild:actionPoint];
+	
+}
+-(void)processBasicEvents
+{
 	Event* nextEvent = [data.eventArray objectAtIndex:nextEventIndex];
+	
+	int seconds = runningTime;
+	
+	int minutes = seconds / 60;
+    seconds -= minutes * 60;
+    seconds = floorf(seconds);
 	
 	//TODO: move the next event check into a function, we'll need to iterate over it a few times to ensure that there aren't more than one events at the same time
 	
-	if(runningTime == [nextEvent.time intValue])
+	while(minutes == [nextEvent.time intValue])
 	{
 		NSString* eventDetails;
 		
@@ -123,7 +233,7 @@
 					break;
 				}
 			}
-						
+			
 			SKSpriteNode* details = [self labelNodeFromString:eventDetails andSize:14];
 			details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
 			details.name = @"eventLabel";
@@ -151,12 +261,15 @@
 		
 		NSLog(@"%@! %@", nextEvent.type, nextEvent.time);
 		if (nextEventIndex < data.eventArray.count-1)
+		{
 			nextEventIndex++;
-	}
-	
-	if (runningTime == matchTime)
-	{
-		[self endGame];
+			nextEvent = [data.eventArray objectAtIndex:nextEventIndex];
+		}
+		else
+		{
+			nextEvent = nil;
+			break;
+		}
 	}
 }
 
@@ -172,15 +285,21 @@
 
 -(void)startTimer:(NSTimer*)timer
 {
-	NSLog(@"timer started");
-	gameTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+	if(!gameEnded)
+	{
+		NSLog(@"timer started");
+		gameTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+		
+		[[self childNodeWithName:@"eventLabel"] removeFromParent];
+	}
 	
-	[[self childNodeWithName:@"eventLabel"] removeFromParent];
 }
 
 - (void)endGame
 {
+	gameEnded = TRUE;
 	[gameTimer invalidate];
+	[[self childNodeWithName:@"eventLabel"] removeFromParent];
 	
 	SKSpriteNode* endGame = [self labelNodeFromString:@"End Game" andSize:34];
 	endGame.position = CGPointMake(self.size.width/2 - endGame.size.width/2, self.size.height/2);
@@ -188,7 +307,7 @@
 	
 }
 
-- (void)populateLabelwithTime:(int)seconds
+- (void)populateLabelwithTime:(int)currentTime
 {
 	
 	//SpriteText* spriteText = [[SpriteText alloc] init];
@@ -196,7 +315,12 @@
 	SKSpriteNode* timeLabelNode = (SKSpriteNode*)[self childNodeWithName:@"timeLabel"];
 	SKLabelNode * label = (SKLabelNode*)[timeLabelNode childNodeWithName:@"label"];
 	
-	label.text = [NSString stringWithFormat:@"%02d:00", runningTime];
+	int seconds = currentTime;
+	int minutes = seconds / 60;
+    seconds -= minutes * 60;
+    seconds = floorf(seconds);
+	
+	label.text = [NSString stringWithFormat:@"%02i:%02i", minutes, seconds];
 	
 }
 
@@ -238,7 +362,7 @@
 -(SKSpriteNode*)labelNodeFromString:(NSString*)string andSize:(int)size
 {
 	
-	SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"Avenir-Heavy"];
+	SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@"Courier"];
 	label.fontSize = size;
 	label.text = string;
 	label.position = CGPointMake(label.frame.size.width / 2, 0);

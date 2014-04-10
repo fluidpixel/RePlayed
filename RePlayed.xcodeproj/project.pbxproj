@@ -25,7 +25,7 @@
 		54F5095618F494C0006A17E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54F5092E18F494BF006A17E8 /* UIKit.framework */; };
 		54F5095E18F494C0006A17E8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 54F5095C18F494C0006A17E8 /* InfoPlist.strings */; };
 		54F5096018F494C0006A17E8 /* RePlayedTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5095F18F494C0006A17E8 /* RePlayedTests.m */; };
-		54F5096B18F4950A006A17E8 /* playground.opta.xml in Resources */ = {isa = PBXBuildFile; fileRef = 54F5096918F4950A006A17E8 /* playground.opta.xml */; };
+		54F5096B18F4950A006A17E8 /* optaGame.xml in Resources */ = {isa = PBXBuildFile; fileRef = 54F5096918F4950A006A17E8 /* optaGame.xml */; };
 		54F5096C18F4950A006A17E8 /* optaPlayers.xml in Resources */ = {isa = PBXBuildFile; fileRef = 54F5096A18F4950A006A17E8 /* optaPlayers.xml */; };
 		54F5097018F49530006A17E8 /* DataParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5096F18F49530006A17E8 /* DataParser.m */; };
 		54F5097318F49602006A17E8 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5097218F49602006A17E8 /* Player.m */; };
@@ -35,6 +35,9 @@
 		54F5097F18F58DE9006A17E8 /* SubstituteEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5097E18F58DE9006A17E8 /* SubstituteEvent.m */; };
 		54F5098218F58E64006A17E8 /* GoalEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5098118F58E64006A17E8 /* GoalEvent.m */; };
 		54F5098518F5F281006A17E8 /* pitch.png in Resources */ = {isa = PBXBuildFile; fileRef = 54F5098418F5F281006A17E8 /* pitch.png */; };
+		54F5098718F6ADDD006A17E8 /* players131898.xml in Resources */ = {isa = PBXBuildFile; fileRef = 54F5098618F6ADDD006A17E8 /* players131898.xml */; };
+		54F5098A18F6B286006A17E8 /* GameEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5098918F6B286006A17E8 /* GameEvent.m */; };
+		54F5098D18F6B3CF006A17E8 /* EventQualifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5098C18F6B3CF006A17E8 /* EventQualifier.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,7 +75,7 @@
 		54F5095B18F494C0006A17E8 /* RePlayedTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RePlayedTests-Info.plist"; sourceTree = "<group>"; };
 		54F5095D18F494C0006A17E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		54F5095F18F494C0006A17E8 /* RePlayedTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RePlayedTests.m; sourceTree = "<group>"; };
-		54F5096918F4950A006A17E8 /* playground.opta.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = playground.opta.xml; sourceTree = "<group>"; };
+		54F5096918F4950A006A17E8 /* optaGame.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = optaGame.xml; sourceTree = "<group>"; };
 		54F5096A18F4950A006A17E8 /* optaPlayers.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = optaPlayers.xml; sourceTree = "<group>"; };
 		54F5096E18F49530006A17E8 /* DataParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataParser.h; sourceTree = "<group>"; };
 		54F5096F18F49530006A17E8 /* DataParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataParser.m; sourceTree = "<group>"; };
@@ -89,6 +92,11 @@
 		54F5098018F58E63006A17E8 /* GoalEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoalEvent.h; sourceTree = "<group>"; };
 		54F5098118F58E64006A17E8 /* GoalEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoalEvent.m; sourceTree = "<group>"; };
 		54F5098418F5F281006A17E8 /* pitch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pitch.png; sourceTree = "<group>"; };
+		54F5098618F6ADDD006A17E8 /* players131898.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = players131898.xml; path = data/players131898.xml; sourceTree = "<group>"; };
+		54F5098818F6B286006A17E8 /* GameEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameEvent.h; sourceTree = "<group>"; };
+		54F5098918F6B286006A17E8 /* GameEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameEvent.m; sourceTree = "<group>"; };
+		54F5098B18F6B3CF006A17E8 /* EventQualifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventQualifier.h; sourceTree = "<group>"; };
+		54F5098C18F6B3CF006A17E8 /* EventQualifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventQualifier.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,10 +207,15 @@
 		54F5096D18F49510006A17E8 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				54F5096918F4950A006A17E8 /* playground.opta.xml */,
+				54F5096918F4950A006A17E8 /* optaGame.xml */,
 				54F5096A18F4950A006A17E8 /* optaPlayers.xml */,
+				54F5098618F6ADDD006A17E8 /* players131898.xml */,
 				54F5096E18F49530006A17E8 /* DataParser.h */,
 				54F5096F18F49530006A17E8 /* DataParser.m */,
+				54F5098818F6B286006A17E8 /* GameEvent.h */,
+				54F5098918F6B286006A17E8 /* GameEvent.m */,
+				54F5098B18F6B3CF006A17E8 /* EventQualifier.h */,
+				54F5098C18F6B3CF006A17E8 /* EventQualifier.m */,
 				54F5097718F58B2C006A17E8 /* Event.h */,
 				54F5097818F58B2C006A17E8 /* Event.m */,
 				54F5098018F58E63006A17E8 /* GoalEvent.h */,
@@ -305,12 +318,13 @@
 			files = (
 				54F5094B18F494BF006A17E8 /* Spaceship.png in Resources */,
 				54F5096C18F4950A006A17E8 /* optaPlayers.xml in Resources */,
-				54F5096B18F4950A006A17E8 /* playground.opta.xml in Resources */,
+				54F5096B18F4950A006A17E8 /* optaGame.xml in Resources */,
 				54F5094D18F494BF006A17E8 /* Images.xcassets in Resources */,
 				54F5098518F5F281006A17E8 /* pitch.png in Resources */,
 				54F5094318F494BF006A17E8 /* Main_iPad.storyboard in Resources */,
 				54F5094018F494BF006A17E8 /* Main_iPhone.storyboard in Resources */,
 				54F5093718F494BF006A17E8 /* InfoPlist.strings in Resources */,
+				54F5098718F6ADDD006A17E8 /* players131898.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +345,8 @@
 			files = (
 				54F5097C18F58B62006A17E8 /* BookingEvent.m in Sources */,
 				54F5094918F494BF006A17E8 /* MyScene.m in Sources */,
+				54F5098A18F6B286006A17E8 /* GameEvent.m in Sources */,
+				54F5098D18F6B3CF006A17E8 /* EventQualifier.m in Sources */,
 				54F5097F18F58DE9006A17E8 /* SubstituteEvent.m in Sources */,
 				54F5098218F58E64006A17E8 /* GoalEvent.m in Sources */,
 				54F5094618F494BF006A17E8 /* ViewController.m in Sources */,

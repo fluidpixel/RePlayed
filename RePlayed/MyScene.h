@@ -16,6 +16,10 @@
 	NSTimer* gameTimer;
 		
 	int nextEventIndex;
+	int nextGameEventIndex;
 	int matchTime;
+	BOOL gameEnded;
+	
+	SKNode* actionLayer;
 }
 @end

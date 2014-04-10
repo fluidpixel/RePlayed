@@ -10,8 +10,7 @@
 #import "Player.h"
 #import "Team.h"
 #import "Event.h"
-
-#import "ViewController.h"
+#import "GameEvent.h"
 
 @implementation DataParser
 
@@ -20,6 +19,7 @@
 @synthesize eventArray;
 @synthesize complete;
 @synthesize playerList;
+@synthesize gameEventArray;
 
 + (id)sharedData {
     static DataParser *sharedData = nil;
@@ -36,7 +36,33 @@
 	//NSData *data = [[NSData alloc] initWithContentsOfFile:path];
 	//NSXMLParser* xmlParser = [[NSXMLParser alloc] initWithData:data];
 	NSURL *dataURL = [[NSBundle mainBundle]
-					URLForResource: @"optaPlayers" withExtension:@"xml"];
+					URLForResource: @"players131898" withExtension:@"xml"];
+	
+	// this is the parsing machine
+	
+    NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithContentsOfURL:dataURL];
+    
+    // this class will handle the events
+    [xmlParser setDelegate:self];
+    [xmlParser setShouldResolveExternalEntities:NO];
+	
+	
+    // now parse the document
+    BOOL ok = [xmlParser parse];
+    if (ok == NO)
+        NSLog(@"Parse Error");
+    else
+        NSLog(@"Parse OK");
+    
+}
+
+-(void)loadGameData
+{
+	//NSString *path = [[NSBundle mainBundle] pathForResource:@"optaPlayers" ofType:@"xml"];
+	//NSData *data = [[NSData alloc] initWithContentsOfFile:path];
+	//NSXMLParser* xmlParser = [[NSXMLParser alloc] initWithData:data];
+	NSURL *dataURL = [[NSBundle mainBundle]
+					  URLForResource: @"optaGame" withExtension:@"xml"];
 	
 	// this is the parsing machine
 	
@@ -52,15 +78,21 @@
         NSLog(@"Parse Error");
     else
         NSLog(@"Parse OK");
-    
 }
 
 -(void)parserDidStartDocument:(NSXMLParser *)parser {
     NSLog(@"didStartDocument");
 
-	team1 = [[Team alloc] init];
-	team2 = [[Team alloc] init];
-	eventArray = [[NSMutableArray alloc] init];	
+	if(!completedPlayerData)
+	{
+		team1 = [[Team alloc] init];
+		team2 = [[Team alloc] init];
+		eventArray = [[NSMutableArray alloc] init];
+	}
+	else
+	{
+		gameEventArray = [[NSMutableArray alloc] init];
+	}
 }
 
 -(void)parserDidEndDocument:(NSXMLParser *)parser {
@@ -68,20 +100,26 @@
 	//NSLog(@"%@", team1);
 	//NSLog(@"%@", team2);
 	
-	NSSortDescriptor *sortDescriptor;
-	sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"time"
-												 ascending:YES];
-	NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-	eventArray = [NSMutableArray arrayWithArray:[eventArray sortedArrayUsingDescriptors:sortDescriptors]];
-	
-	complete = TRUE;
-	
-	playerList = [[NSMutableArray alloc] initWithArray:team1.players];
-	[playerList addObjectsFromArray:team2.players];
-	
-	//NSLog(@"events %@", eventArray);
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"finishedParsing" object:nil];
+	if(!completedPlayerData)
+	{
+		NSSortDescriptor *sortDescriptor;
+		sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"time"
+													 ascending:YES];
+		NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+		eventArray = [NSMutableArray arrayWithArray:[eventArray sortedArrayUsingDescriptors:sortDescriptors]];
+			
+		playerList = [[NSMutableArray alloc] initWithArray:team1.players];
+		[playerList addObjectsFromArray:team2.players];
+		
+		completedPlayerData = TRUE;
+		[self loadGameData];
+	}
+	else
+	{
+		complete = TRUE;
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"finishedParsing" object:nil];
+		
+	}
 }
 
 -(void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
@@ -101,7 +139,8 @@
 //        value = [attributeDict objectForKey:key];
 //        NSLog(@"  attribute: %@ = %@", key, value);
 //    }
-	
+
+#pragma mark Player Data
 	if ([elementName isEqualToString:@"TeamData"])
 	{
 		Team* team = [[Team alloc] init];
@@ -245,6 +284,19 @@
 			}
 		}
 		
+	}
+#pragma mark Game Data
+	else if ([elementName isEqualToString:@"Game"])
+	{
+		team1.teamId = [attributeDict objectForKey:@"home_team_id"];
+		team2.teamId = [attributeDict objectForKey:@"away_team_id"];
+	}
+	
+	else if ([elementName isEqualToString:@"Event"])
+	{
+		GameEvent* gameEvent = [[GameEvent alloc] initWithDictionary: attributeDict];
+		
+		[gameEventArray addObject:gameEvent];
 	}
 }
 
