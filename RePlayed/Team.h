@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Formation.h"
 
 @interface Team : NSObject
 
@@ -16,5 +17,6 @@
 @property (nonatomic, strong) NSString *side;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *teamId;
+@property (nonatomic, strong) Formation *formation;
 
 @end

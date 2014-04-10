@@ -38,6 +38,8 @@
 		54F5098718F6ADDD006A17E8 /* players131898.xml in Resources */ = {isa = PBXBuildFile; fileRef = 54F5098618F6ADDD006A17E8 /* players131898.xml */; };
 		54F5098A18F6B286006A17E8 /* GameEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5098918F6B286006A17E8 /* GameEvent.m */; };
 		54F5098D18F6B3CF006A17E8 /* EventQualifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5098C18F6B3CF006A17E8 /* EventQualifier.m */; };
+		54F5099018F72987006A17E8 /* Formation.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5098F18F72987006A17E8 /* Formation.m */; };
+		54F5099318F72B7F006A17E8 /* PlayerPositions.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F5099218F72B7F006A17E8 /* PlayerPositions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,10 @@
 		54F5098918F6B286006A17E8 /* GameEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameEvent.m; sourceTree = "<group>"; };
 		54F5098B18F6B3CF006A17E8 /* EventQualifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventQualifier.h; sourceTree = "<group>"; };
 		54F5098C18F6B3CF006A17E8 /* EventQualifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventQualifier.m; sourceTree = "<group>"; };
+		54F5098E18F72987006A17E8 /* Formation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Formation.h; sourceTree = "<group>"; };
+		54F5098F18F72987006A17E8 /* Formation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Formation.m; sourceTree = "<group>"; };
+		54F5099118F72B7F006A17E8 /* PlayerPositions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerPositions.h; sourceTree = "<group>"; };
+		54F5099218F72B7F006A17E8 /* PlayerPositions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerPositions.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +232,10 @@
 				54F5097E18F58DE9006A17E8 /* SubstituteEvent.m */,
 				54F5097418F55BBA006A17E8 /* Team.h */,
 				54F5097518F55BBA006A17E8 /* Team.m */,
+				54F5098E18F72987006A17E8 /* Formation.h */,
+				54F5098F18F72987006A17E8 /* Formation.m */,
+				54F5099118F72B7F006A17E8 /* PlayerPositions.h */,
+				54F5099218F72B7F006A17E8 /* PlayerPositions.m */,
 				54F5097118F49602006A17E8 /* Player.h */,
 				54F5097218F49602006A17E8 /* Player.m */,
 			);
@@ -349,9 +359,11 @@
 				54F5098D18F6B3CF006A17E8 /* EventQualifier.m in Sources */,
 				54F5097F18F58DE9006A17E8 /* SubstituteEvent.m in Sources */,
 				54F5098218F58E64006A17E8 /* GoalEvent.m in Sources */,
+				54F5099318F72B7F006A17E8 /* PlayerPositions.m in Sources */,
 				54F5094618F494BF006A17E8 /* ViewController.m in Sources */,
 				54F5093D18F494BF006A17E8 /* AppDelegate.m in Sources */,
 				54F5097018F49530006A17E8 /* DataParser.m in Sources */,
+				54F5099018F72987006A17E8 /* Formation.m in Sources */,
 				54F5097918F58B2C006A17E8 /* Event.m in Sources */,
 				54F5097318F49602006A17E8 /* Player.m in Sources */,
 				54F5097618F55BBA006A17E8 /* Team.m in Sources */,

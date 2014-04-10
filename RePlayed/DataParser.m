@@ -11,6 +11,7 @@
 #import "Team.h"
 #import "Event.h"
 #import "GameEvent.h"
+#import "Formation.h"
 
 @implementation DataParser
 
@@ -294,9 +295,34 @@
 	
 	else if ([elementName isEqualToString:@"Event"])
 	{
+		if([[attributeDict objectForKey:@"type_id"] isEqualToString:@"34"])
+		{
+			NSLog(@"lineup");
+		}
+		
 		GameEvent* gameEvent = [[GameEvent alloc] initWithDictionary: attributeDict];
 		
 		[gameEventArray addObject:gameEvent];
+	}
+	else if ([elementName isEqualToString:@"Q"])
+	{
+		EventQualifier* qualifier = [[EventQualifier alloc] initWithDictionary: attributeDict];
+		GameEvent* gameEvent = gameEventArray.lastObject;
+		
+		if ([qualifier.qualifierId isEqualToString:@"130"])
+		{
+			if([gameEvent.teamId isEqualToString:team1.teamId])
+			{
+				team1.formation = [[Formation alloc] initWithFormation:[attributeDict objectForKey:@"value"]];
+			}
+			else
+			{
+				team2.formation = [[Formation alloc] initWithFormation:[attributeDict objectForKey:@"value"]];
+			}
+		}
+		
+		
+		gameEvent.eventQualifier = qualifier;
 	}
 }
 

@@ -10,4 +10,18 @@
 
 @implementation EventQualifier
 
+-(EventQualifier*)initWithDictionary:(NSDictionary*)dictionary
+{
+	self = [super init];
+	
+	if (self)
+	{
+		self.uniqueId = [dictionary objectForKey:@"id"];
+		self.qualifierId = [dictionary objectForKey:@"qualifier_id"];
+		self.value = [dictionary objectForKey:@"value"];
+	}
+	
+	return  self;
+}
+
 @end

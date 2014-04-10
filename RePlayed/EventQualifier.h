@@ -14,4 +14,6 @@
 @property (nonatomic, strong) NSString* qualifierId;
 @property (nonatomic, strong) NSString* value;
 
+-(EventQualifier*)initWithDictionary:(NSDictionary*)dictionary;
+
 @end
