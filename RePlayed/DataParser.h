@@ -18,6 +18,7 @@
 	Team* currentTeam;
 	Player* currentPlayer;
 	int currentPlayerIndex;
+	NSMutableArray* playerList;
 	
 	NSMutableArray* eventArray;
 	
@@ -33,6 +34,7 @@
 @property (nonatomic, retain) Team* team1;
 @property (nonatomic, retain) Team* team2;
 @property (nonatomic, assign) BOOL complete;
+@property (nonatomic, retain) NSMutableArray* playerList;
 
 -(void)loadPlayerData;
 

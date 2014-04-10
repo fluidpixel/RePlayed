@@ -25,9 +25,9 @@
 		loading.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
 		[self addChild:loading];
 		
-		dataParser = [DataParser sharedData];
+		data = [DataParser sharedData];
 		
-		if (dataParser.complete)
+		if (data.complete)
 		{
 			[self dataReady];
 		}
@@ -67,7 +67,7 @@
 	gameTimeLabel.name = @"timeLabel";
 	[self addChild:gameTimeLabel];
 	
-	gameTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+	[self startTimer:nil];
 	
 }
 
@@ -78,26 +78,28 @@
 	//pause timer for tempTimer time to "wait" for half time
 	if (runningTime == 45)
 	{
-		if([gameTimer isValid])
-		{
-		[gameTimer invalidate];
-
-		[NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(updateTimer:) userInfo:nil repeats: NO];
-		}
+		[self pauseGameFor:2.0];
+		SKSpriteNode* details = [self labelNodeFromString:@"HALF TIME" andSize:18];
+		details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
+		details.name = @"eventLabel";
+		[self addChild:details];
 	}
-	if (runningTime == 46)
-	{
-		gameTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
-	}
+	
 	[self populateLabelwithTime:runningTime];
 	
-	Event* nextEvent = [dataParser.eventArray objectAtIndex:nextEventIndex];
-		
+	Event* nextEvent = [data.eventArray objectAtIndex:nextEventIndex];
+	
+	//TODO: move the next event check into a function, we'll need to iterate over it a few times to ensure that there aren't more than one events at the same time
+	
 	if(runningTime == [nextEvent.time intValue])
 	{
+		NSString* eventDetails;
+		
 		if([nextEvent.type isEqualToString:@"goal"])
 		{
-			if([nextEvent.team.teamRef isEqualToString:dataParser.team1.teamRef])
+			[self pauseGameFor:1.0];
+			
+			if([nextEvent.team.teamRef isEqualToString:data.team1.teamRef])
 			{
 				SKLabelNode* scoreLabel = (SKLabelNode*)[[[self childNodeWithName:@"teamInfo"] childNodeWithName:@"score1"] childNodeWithName:@"label"];
 				int score = [scoreLabel.text intValue];
@@ -111,10 +113,44 @@
 				score ++;
 				scoreLabel.text = [NSString stringWithFormat:@"%i", score];
 			}
+			
+			
+			for(Player* player in data.playerList)
+			{
+				if([nextEvent.goalEvent.playerRef isEqualToString:player.playerRef])
+				{
+					eventDetails = [NSString stringWithFormat:@"%@ %@'s %@", player.firstName, player.lastName, nextEvent.goalEvent.type];
+					break;
+				}
+			}
+						
+			SKSpriteNode* details = [self labelNodeFromString:eventDetails andSize:14];
+			details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
+			details.name = @"eventLabel";
+			[self addChild:details];
+		}
+		
+		else if ([nextEvent.type isEqualToString:@"booking"])
+		{
+			[self pauseGameFor:1];
+			
+			for(Player* player in data.playerList)
+			{
+				if([nextEvent.booking.playerRef isEqualToString:player.playerRef])
+				{
+					eventDetails = [NSString stringWithFormat:@"%@! %@ Card for %@ %@", nextEvent.booking.reason, nextEvent.booking.card, player.firstName, player.lastName];
+					break;
+				}
+			}
+			
+			SKSpriteNode* details = [self labelNodeFromString:eventDetails andSize:14];
+			details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
+			details.name = @"eventLabel";
+			[self addChild:details];
 		}
 		
 		NSLog(@"%@! %@", nextEvent.type, nextEvent.time);
-		if (nextEventIndex < dataParser.eventArray.count-1)
+		if (nextEventIndex < data.eventArray.count-1)
 			nextEventIndex++;
 	}
 	
@@ -122,6 +158,24 @@
 	{
 		[self endGame];
 	}
+}
+
+#pragma mark Timer Stuff
+-(void)pauseGameFor:(float)seconds
+{
+	NSLog(@"timer paused");
+	[gameTimer invalidate];
+	
+	//pause for x seconds before restarting timer
+	[NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(startTimer:) userInfo:nil repeats: NO];
+}
+
+-(void)startTimer:(NSTimer*)timer
+{
+	NSLog(@"timer started");
+	gameTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+	
+	[[self childNodeWithName:@"eventLabel"] removeFromParent];
 }
 
 - (void)endGame
@@ -146,6 +200,7 @@
 	
 }
 
+#pragma mark Interface
 -(void)addHeaderTeamInfo
 {
 	SKSpriteNode *teamInfo = [[SKSpriteNode alloc] initWithColor:[UIColor colorWithWhite:1.0 alpha:0.0]
@@ -154,11 +209,11 @@
 	teamInfo.position = CGPointMake(0, self.size.height);
 	teamInfo.name = @"teamInfo";
 	
-	SKSpriteNode *team1 = [self labelNodeFromString:dataParser.team1.name andSize:12];
+	SKSpriteNode *team1 = [self labelNodeFromString:data.team1.name andSize:12];
 	team1.position = CGPointMake(self.size.width/2 - team1.size.width - 20, -40);
 	[teamInfo addChild:team1];
 	
-	SKSpriteNode *team2 = [self labelNodeFromString:dataParser.team2.name andSize:12];
+	SKSpriteNode *team2 = [self labelNodeFromString:data.team2.name andSize:12];
 	team2.position = CGPointMake(self.size.width/2 + 20, -40);
 	[teamInfo addChild:team2];
 	
@@ -179,6 +234,7 @@
 	[self addChild:teamInfo];
 }
 
+#pragma Mark Node from String
 -(SKSpriteNode*)labelNodeFromString:(NSString*)string andSize:(int)size
 {
 	

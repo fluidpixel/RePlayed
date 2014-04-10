@@ -19,6 +19,7 @@
 @synthesize team2;
 @synthesize eventArray;
 @synthesize complete;
+@synthesize playerList;
 
 + (id)sharedData {
     static DataParser *sharedData = nil;
@@ -59,7 +60,7 @@
 
 	team1 = [[Team alloc] init];
 	team2 = [[Team alloc] init];
-	eventArray = [[NSMutableArray alloc] init];
+	eventArray = [[NSMutableArray alloc] init];	
 }
 
 -(void)parserDidEndDocument:(NSXMLParser *)parser {
@@ -74,6 +75,9 @@
 	eventArray = [NSMutableArray arrayWithArray:[eventArray sortedArrayUsingDescriptors:sortDescriptors]];
 	
 	complete = TRUE;
+	
+	playerList = [[NSMutableArray alloc] initWithArray:team1.players];
+	[playerList addObjectsFromArray:team2.players];
 	
 	//NSLog(@"events %@", eventArray);
 
