@@ -49,7 +49,7 @@
 	[self addChild:pitch];
 	
 	ball = [SKSpriteNode spriteNodeWithImageNamed:@"ball"];
-	ball.position = [self createPointonPitchWithX:50.0 andY:50.0];
+	ball.position = [self pointOnPitchWithX:50.0 andY:50.0];
 	ball.zPosition = 1;
 	
 	[self addChild:ball];
@@ -145,27 +145,30 @@
 		if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
 		{
 			color = [UIColor redColor];
-			point = [self createPointonPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
+			point = [self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
 		}
 		else
 		{
 			color = [UIColor blueColor];
-			point = [self createPointonPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX];
+			point = [self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX];
 		}
 	
 		//ignore formations, start/stop delays from action points
 		if (nextGameEvent.eventType != 17 && nextGameEvent.eventType != 18 && nextGameEvent.eventType != 19 && nextGameEvent.eventType != 24 && nextGameEvent.eventType != 34 && nextGameEvent.eventType != 32 && nextGameEvent.eventType != 43 && nextGameEvent.eventType != 27 && nextGameEvent.eventType != 28 && nextGameEvent.eventType != 30 && nextGameEvent.eventType != 40)
 		{
-			//goal 16, miss 13, saved attempt 15
-			if (nextGameEvent.eventType == 16 || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15)
+			
+			[self moveBallWithEvent:nextGameEvent andPosition:point];
+
+			//goal 16, miss 13, saved attempt 15, save 10
+			if (nextGameEvent.eventType == 16 || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15) // || nextGameEvent.eventType == 10)
 			{
 				if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
 				{
-					[self addActionPointatPoint:[self createPointonPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+					[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
 				}
 				else
 				{
-					[self addActionPointatPoint:[self createPointonPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+					[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
 				}
 				
 				if (nextGameEvent.eventType == 16)//goal
@@ -176,17 +179,14 @@
 				{
 					[self missedChance:nextGameEvent];
 				}
-				else if (nextGameEvent.eventType == 15)//save
+				else if (nextGameEvent.eventType == 10)//save
 				{
-					[self saveEvent:nextGameEvent];
+					//[self saveEvent:nextGameEvent];
 				}
-				
-				[ball runAction:[SKAction sequence:@[[SKAction waitForDuration:1.5],[SKAction moveTo:[self createPointonPitchWithX:50.0 andY:50.0] duration:0.1]]]];
 				
 			}
 			else
 			{
-				[self moveBallWithEvent:nextGameEvent andPosition:point];
 				[self addActionPointatPoint:point withColor:color andSize:CGSizeMake(4,4)];
 			}
 		}
@@ -194,7 +194,7 @@
 		//Game restarts so reset ball
 		if(nextGameEvent.eventType == 32 || nextGameEvent.eventType == 30)
 		{
-			[ball runAction:[SKAction moveTo:[self createPointonPitchWithX:50.0 andY:50.0] duration:0.1]];
+			[ball runAction:[SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:0.1]];
 		}
 		
 		//check if there's any more events at this time
@@ -211,7 +211,7 @@
 	}
 }
 
--(CGPoint)createPointonPitchWithX:(float)x andY:(float)y
+-(CGPoint)pointOnPitchWithX:(float)x andY:(float)y
 {
 	float pitchWidth = self.size.width * 0.82;
 	float pitchHeight = self.size.height * 0.75;
@@ -237,20 +237,88 @@
 
 -(void)moveBallWithEvent:(GameEvent*)event andPosition:(CGPoint)point
 {
-	for (EventQualifier* qualifier in event.qualifiers)
+	
+	if (event.eventType == 16 || event.eventType == 13) //goal 16 or miss 13
 	{
-		if(qualifier.qualifierId == 155)//in the air
+		CGPoint goalPoint;
+		
+		for (EventQualifier* qualifier in event.qualifiers)
 		{
-			[ball runAction:
-			 [SKAction group:@[[SKAction sequence:@[[SKAction scaleTo:2.0 duration:0.1], [SKAction scaleTo:1.0 duration:0.1]]], [SKAction moveTo:point duration:0.2]]]];
+			if (qualifier.qualifierId == 102)
+			{
+				float y = 0.0;
+				if(event.posX > 50)
+				{
+					y = 100.0;
+				}
+				
+				if ([event.teamId isEqualToString:data.team1.teamId])
+					goalPoint = [self pointOnPitchWithX:[qualifier.value floatValue] andY:y];
+				else
+					goalPoint = [self pointOnPitchWithX:[qualifier.value floatValue] andY:100-y];
+				break;
+			}
 		}
-		else//along the ground
+		
+		if (event.eventType == 16)
+		{
+			[ball runAction:[SKAction sequence:@[
+												 [SKAction moveTo:point duration:0.1],
+												 [SKAction moveTo:goalPoint duration:0.1],[SKAction waitForDuration:1.8],
+												 [SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:0.0]]]];
+		}
+		else //miss
+		{
+			[ball runAction:[SKAction sequence:@[
+												 [SKAction moveTo:point duration:0.1],
+												 [SKAction moveTo:goalPoint duration:0.1]]]];
+		}
+	}
+//	else if(event.eventType == 10) //saved
+//	{
+//
+//		float x = 0.0;
+//		float y = 0.0;
+//		
+//		for (EventQualifier* qualifier in event.qualifiers)
+//		{
+//			
+//			
+//			if (qualifier.qualifierId == 146) //save x
+//			{
+//				x = [qualifier.value floatValue];
+//			}
+//			else if (qualifier.qualifierId == 147) //save y
+//			{
+//				y = [qualifier.value floatValue];
+//			}
+//			
+//		}
+//		
+//		[ball runAction:[SKAction sequence:@[
+//											 [SKAction moveTo:point duration:0.1],
+//											 [SKAction moveTo:[self createPointonPitchWithX:y andY:x] duration:0.1]]]];
+//	}
+	else
+	{
+		BOOL inAir = FALSE;
+		for (EventQualifier* qualifier in event.qualifiers)
+		{
+			if(qualifier.qualifierId == 155)//in the air
+			{
+				[ball runAction:
+				 [SKAction group:@[[SKAction sequence:@[[SKAction scaleTo:2.0 duration:0.1], [SKAction scaleTo:1.0 duration:0.1]]], [SKAction moveTo:point duration:0.2]]]];
+				inAir = TRUE;
+				break;
+				
+			}
+		}
+		if (!inAir)
 		{
 			[ball runAction:[SKAction moveTo:point duration:0.1]];
 		}
 	}
 	
-	 
 }
 
 -(void)scoredGoal:(GameEvent*)nextEvent
