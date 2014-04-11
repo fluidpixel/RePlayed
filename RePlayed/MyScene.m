@@ -53,7 +53,7 @@
 	
 	ball = [SKSpriteNode spriteNodeWithImageNamed:@"ball"];
 	ball.position = [self pointOnPitchWithX:50.0 andY:50.0];
-	ball.zPosition = 1;
+	ball.zPosition = 2;
 	
 	[self addChild:ball];
 	
@@ -98,9 +98,11 @@
 		[self pauseGameFor:updateRate * 200];
 		
 		//reset action grid
-		[actionLayer removeAllChildren];
+		NSMutableArray* childrenToRemove = [NSMutableArray arrayWithArray:[actionLayer children]];
+		[childrenToRemove removeObject:[actionLayer childNodeWithName:@"players"]];
+		[actionLayer removeChildrenInArray:childrenToRemove];
 		
-			[self showEventDetailLabelWithString:@"HALF TIME"];
+		[self showEventDetailLabelWithString:@"HALF TIME"];
 	}
 	
 	[self populateLabelwithTime:runningTime];
@@ -168,6 +170,8 @@
 			
 			[self moveBallWithEvent:nextGameEvent andPosition:point];
 
+			[self addPlayer:nextGameEvent.playerId atPoint:point withTeam:nil];
+			
 			//goal 16, miss 13, saved attempt 15, save 10
 			if (nextGameEvent.eventType == 16 || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15) // || nextGameEvent.eventType == 10)
 			{
@@ -206,7 +210,7 @@
 			}
 		}
 		
-		//Game restarts so reset ball
+		//Game restart events, so reset ball
 		if(nextGameEvent.eventType == 32 || nextGameEvent.eventType == 30)
 		{
 			[ball runAction:[SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:updateRate * 10]];
@@ -244,10 +248,72 @@
 	NSArray* actionArray = [actionLayer children];
 	if(actionArray.count > 15)
 	{
-	   [[actionArray objectAtIndex:0] removeFromParent];
+		[[actionArray objectAtIndex:1] removeFromParent];
 	}
 	
 	[actionLayer addChild:actionPoint];
+}
+
+-(void)addPlayer:(NSString*)playerId atPoint:(CGPoint)point withTeam:(Team*)team
+{
+	
+	NSString* playerNumber;
+	NSString* playerRef;
+	
+	playerId = [NSString stringWithFormat:@"p%@", playerId];
+	
+	for(Player* player in data.playerList)
+	{
+		
+		if([playerId isEqualToString:player.playerRef])
+		{
+			playerNumber = player.shirtNumber;
+			playerRef = player.playerRef;
+			SKNode* playerNode = [actionLayer childNodeWithName:@"players"];
+			if(!playerNode)
+			{
+				playerNode = [[SKNode alloc] init];
+				playerNode.name = @"players";
+				[actionLayer addChild:playerNode];
+			}
+			
+			BOOL movedPlayer = false;
+			
+			for(SKLabelNode* label in playerNode.children)
+			{
+				if ([[label.userData objectForKey:@"playerRef"] isEqualToString:playerRef])
+				{
+					[label removeAllActions];
+					[label runAction:[SKAction sequence:@[[SKAction moveTo:point duration:updateRate * 10],
+														  [SKAction waitForDuration:updateRate * 500],
+														  [SKAction removeFromParent]]]];
+					
+					movedPlayer = true;
+					break;
+				}
+			}
+			
+			if (!movedPlayer)
+			{
+				SKLabelNode* playerLabel = [SKLabelNode labelNodeWithFontNamed:@"Courier-Bold"];
+				playerLabel.text = playerNumber;
+				playerLabel.fontSize = 12;
+				playerLabel.position = point;
+				playerLabel.name = @"playerLabel";
+				
+				NSMutableDictionary* dict = [[NSMutableDictionary alloc] initWithCapacity:1];
+				[playerLabel setUserData:dict];
+				[[playerLabel userData] setObject:playerRef forKey:@"playerRef"];
+				
+				playerLabel.zPosition = 1;
+				[playerNode addChild:playerLabel];
+				
+				[playerLabel runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 500], [SKAction removeFromParent]]]];
+			}
+			
+			break;
+		}
+	}
 }
 
 -(void)moveBallWithEvent:(GameEvent*)event andPosition:(CGPoint)point
@@ -452,7 +518,9 @@
 
 -(void)startTimer:(NSTimer*)timer
 {
-	[actionLayer removeAllChildren];
+	NSMutableArray* childrenToRemove = [NSMutableArray arrayWithArray:[actionLayer children]];
+	[childrenToRemove removeObject:[actionLayer childNodeWithName:@"players"]];
+	[actionLayer removeChildrenInArray:childrenToRemove];
 	
 	if(!gameEnded)
 	{
@@ -469,7 +537,9 @@
 	gameEnded = TRUE;
 	[gameTimer invalidate];
 	[[self childNodeWithName:@"eventLabel"] removeFromParent];
-	[actionLayer removeAllChildren];
+	NSMutableArray* childrenToRemove = [NSMutableArray arrayWithArray:[actionLayer children]];
+	[childrenToRemove removeObject:[actionLayer childNodeWithName:@"players"]];
+	[actionLayer removeChildrenInArray:childrenToRemove];
 	
 	[self showEventDetailLabelWithString:@"END GAME"];
 	
