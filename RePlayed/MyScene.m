@@ -150,7 +150,15 @@
 			color = [UIColor blueColor];
 		}
 		
-		[self addActionPointatPoint:[self createPointonPitch:nextGameEvent.posY and:nextGameEvent.posX] withColor:color];
+		if (nextGameEvent.eventType == 16)
+		{
+			[self addActionPointatPoint:[self createPointonPitch:nextGameEvent.posY and:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+		}
+		else
+		{
+			[self addActionPointatPoint:[self createPointonPitch:nextGameEvent.posY and:nextGameEvent.posX] withColor:color andSize:CGSizeMake(4,4)];
+		}
+		
 		
 		if (nextGameEventIndex < data.gameEventArray.count-1)
 		{
@@ -175,9 +183,9 @@
 	return CGPointMake(x * pitchWidth * 0.01 + pitchXOffset, y * pitchHeight * 0.01 + pitchYOffset);
 }
 
--(void)addActionPointatPoint:(CGPoint)point withColor:(UIColor*)color
+-(void)addActionPointatPoint:(CGPoint)point withColor:(UIColor*)color andSize:(CGSize)size
 {
-	SKSpriteNode* actionPoint = [SKSpriteNode spriteNodeWithColor:color size:CGSizeMake(4,4)];
+	SKSpriteNode* actionPoint = [SKSpriteNode spriteNodeWithColor:color size:size];
 	actionPoint.position = point;
 	
 	NSArray* actionArray = [actionLayer children];

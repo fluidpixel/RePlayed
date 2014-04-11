@@ -37,7 +37,7 @@
 	//NSData *data = [[NSData alloc] initWithContentsOfFile:path];
 	//NSXMLParser* xmlParser = [[NSXMLParser alloc] initWithData:data];
 	NSURL *dataURL = [[NSBundle mainBundle]
-					URLForResource: @"players131898" withExtension:@"xml"];
+					URLForResource: @"optaPlayers" withExtension:@"xml"];
 	
 	// this is the parsing machine
 	
@@ -298,6 +298,10 @@
 		if([[attributeDict objectForKey:@"type_id"] isEqualToString:@"34"])
 		{
 			NSLog(@"lineup");
+		}
+		else if ([[attributeDict objectForKey:@"type_id"] isEqualToString:@"16"])
+		{
+			NSLog(@"Goal!");
 		}
 		
 		GameEvent* gameEvent = [[GameEvent alloc] initWithDictionary: attributeDict];
