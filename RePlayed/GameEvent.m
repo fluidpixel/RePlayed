@@ -26,7 +26,7 @@
 		self.teamId = [dictionary objectForKey:@"team_id"];
 		self.timeStamp = [dictionary objectForKey:@"timedtamp"];
 		self.eventType = [[dictionary objectForKey:@"type_id"] intValue];
-		
+		self.playerId = [dictionary objectForKey:@"player_id"];
 		self.posX = [[dictionary objectForKey:@"x"] floatValue];
 		self.posY = [[dictionary objectForKey:@"y"] floatValue];
 	}

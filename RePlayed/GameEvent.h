@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSString* timeStamp;
 @property (nonatomic, strong) NSString* lastModified;
 @property (nonatomic, strong) NSString* eventId;
+@property (nonatomic, strong) NSString* playerId;
 @property (assign) int	eventType;
 @property (assign) float posX;
 @property (assign) float posY;

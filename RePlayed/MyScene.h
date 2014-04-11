@@ -20,6 +20,8 @@
 	int matchTime;
 	BOOL gameEnded;
 	
+	SKSpriteNode* ball;
+	
 	SKNode* actionLayer;
 }
 @end

@@ -48,6 +48,12 @@
 	pitch.zPosition = -1;
 	[self addChild:pitch];
 	
+	ball = [SKSpriteNode spriteNodeWithImageNamed:@"ball"];
+	ball.position = [self createPointonPitchWithX:50.0 andY:50.0];
+	ball.zPosition = 1;
+	
+	[self addChild:ball];
+	
 	actionLayer = [[SKNode alloc] init];
 	actionLayer.name = @"actionLayer";
 	[self addChild:actionLayer];
@@ -104,7 +110,7 @@
 	
 	if(!gameEnded)
 	{
-		[self processBasicEvents];
+		//[self processBasicEvents];
 		[self processDetailedEvents];
 	}
 	
@@ -149,16 +155,38 @@
 		{
 			color = [UIColor blueColor];
 		}
-		
-		if (nextGameEvent.eventType == 16)
+	
+		//ignore formations, start/stop delays from action points
+		if (nextGameEvent.eventType != 34 && nextGameEvent.eventType != 32 && nextGameEvent.eventType != 43 && nextGameEvent.eventType != 27 && nextGameEvent.eventType != 28 && nextGameEvent.eventType != 30)
 		{
-			[self addActionPointatPoint:[self createPointonPitch:nextGameEvent.posY and:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
-		}
-		else
-		{
-			[self addActionPointatPoint:[self createPointonPitch:nextGameEvent.posY and:nextGameEvent.posX] withColor:color andSize:CGSizeMake(4,4)];
+			
+			if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
+			{
+			[self addActionPointatPoint:[self createPointonPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(4,4)];
+			}
+			else
+			{
+				[self addActionPointatPoint:[self createPointonPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(4,4)];
+			}
+			
+			if (nextGameEvent.eventType == 16)
+			{
+				[self addActionPointatPoint:[self createPointonPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+				[self scoredGoal:nextGameEvent];
+				
+				[ball runAction:[SKAction sequence:@[[SKAction waitForDuration:1.5],[SKAction moveTo:[self createPointonPitchWithX:50.0 andY:50.0] duration:0.1]]]];
+				
+			}
+			else
+			{
+				
+			}
 		}
 		
+		else if(nextGameEvent.eventType == 32 || nextGameEvent.eventType == 30)
+		{
+			[ball runAction:[SKAction moveTo:[self createPointonPitchWithX:50.0 andY:50.0] duration:0.1]];
+		}
 		
 		if (nextGameEventIndex < data.gameEventArray.count-1)
 		{
@@ -173,7 +201,7 @@
 	}
 }
 
--(CGPoint)createPointonPitch:(float)x and:(float)y
+-(CGPoint)createPointonPitchWithX:(float)x andY:(float)y
 {
 	float pitchWidth = self.size.width * 0.82;
 	float pitchHeight = self.size.height * 0.75;
@@ -196,18 +224,26 @@
 	
 	[actionLayer addChild:actionPoint];
 	
+	[ball runAction:[SKAction moveTo:point duration:0.1]];
+	
 }
 -(void)processBasicEvents
 {
-	Event* nextEvent = [data.eventArray objectAtIndex:nextEventIndex];
-	
+	Event* nextEvent;
+	if(nextEventIndex != -1) //there are no more events left to process
+	{
+		nextEvent = [data.eventArray objectAtIndex:nextEventIndex];
+	}
+	else
+	{
+		nextEvent = nil;
+	}
+
 	int seconds = runningTime;
 	
 	int minutes = seconds / 60;
     seconds -= minutes * 60;
     seconds = floorf(seconds);
-	
-	//TODO: move the next event check into a function, we'll need to iterate over it a few times to ensure that there aren't more than one events at the same time
 	
 	while(minutes == [nextEvent.time intValue])
 	{
@@ -215,37 +251,7 @@
 		
 		if([nextEvent.type isEqualToString:@"goal"])
 		{
-			[self pauseGameFor:1.0];
-			
-			if([nextEvent.team.teamRef isEqualToString:data.team1.teamRef])
-			{
-				SKLabelNode* scoreLabel = (SKLabelNode*)[[[self childNodeWithName:@"teamInfo"] childNodeWithName:@"score1"] childNodeWithName:@"label"];
-				int score = [scoreLabel.text intValue];
-				score ++;
-				scoreLabel.text = [NSString stringWithFormat:@"%i", score];
-			}
-			else
-			{
-				SKLabelNode* scoreLabel = (SKLabelNode*)[[[self childNodeWithName:@"teamInfo"] childNodeWithName:@"score2"] childNodeWithName:@"label"];
-				int score = [scoreLabel.text intValue];
-				score ++;
-				scoreLabel.text = [NSString stringWithFormat:@"%i", score];
-			}
-			
-			
-			for(Player* player in data.playerList)
-			{
-				if([nextEvent.goalEvent.playerRef isEqualToString:player.playerRef])
-				{
-					eventDetails = [NSString stringWithFormat:@"%@ %@'s %@", player.firstName, player.lastName, nextEvent.goalEvent.type];
-					break;
-				}
-			}
-			
-			SKSpriteNode* details = [self labelNodeFromString:eventDetails andSize:14];
-			details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
-			details.name = @"eventLabel";
-			[self addChild:details];
+			//[self scoredGoal];
 		}
 		
 		else if ([nextEvent.type isEqualToString:@"booking"])
@@ -276,11 +282,50 @@
 		else
 		{
 			nextEvent = nil;
+			nextEventIndex = -1;
 			break;
 		}
 	}
 }
 
+-(void)scoredGoal:(GameEvent*)nextEvent
+{
+	[self pauseGameFor:1.0];
+	
+	if([nextEvent.teamId isEqualToString:data.team1.teamId])
+	{
+		SKLabelNode* scoreLabel = (SKLabelNode*)[[[self childNodeWithName:@"teamInfo"] childNodeWithName:@"score1"] childNodeWithName:@"label"];
+		int score = [scoreLabel.text intValue];
+		score ++;
+		scoreLabel.text = [NSString stringWithFormat:@"%i", score];
+	}
+	else
+	{
+		SKLabelNode* scoreLabel = (SKLabelNode*)[[[self childNodeWithName:@"teamInfo"] childNodeWithName:@"score2"] childNodeWithName:@"label"];
+		int score = [scoreLabel.text intValue];
+		score ++;
+		scoreLabel.text = [NSString stringWithFormat:@"%i", score];
+	}
+	
+	NSString* eventDetails;
+	
+	for(Player* player in data.playerList)
+	{
+		NSString* playerId = [NSString stringWithFormat:@"p%@", nextEvent.playerId];
+		
+		if([playerId isEqualToString:player.playerRef])
+		{
+			eventDetails = [NSString stringWithFormat:@"%@ %@'s %@", player.firstName, player.lastName, @"Goal"];
+			break;
+		}
+	}
+	
+	SKSpriteNode* details = [self labelNodeFromString:eventDetails andSize:14];
+	details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
+	details.name = @"eventLabel";
+	[self addChild:details];
+	
+}
 #pragma mark Timer Stuff
 -(void)pauseGameFor:(float)seconds
 {
