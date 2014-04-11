@@ -29,6 +29,7 @@
 		self.playerId = [dictionary objectForKey:@"player_id"];
 		self.posX = [[dictionary objectForKey:@"x"] floatValue];
 		self.posY = [[dictionary objectForKey:@"y"] floatValue];
+		self.qualifiers = [[NSMutableArray alloc] init];
 	}
 	
 	return  self;

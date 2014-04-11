@@ -17,7 +17,7 @@
 	if (self)
 	{
 		self.uniqueId = [dictionary objectForKey:@"id"];
-		self.qualifierId = [dictionary objectForKey:@"qualifier_id"];
+		self.qualifierId = [[dictionary objectForKey:@"qualifier_id"] intValue];
 		self.value = [dictionary objectForKey:@"value"];
 	}
 	

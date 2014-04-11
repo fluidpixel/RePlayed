@@ -24,8 +24,7 @@
 @property (assign) int	eventType;
 @property (assign) float posX;
 @property (assign) float posY;
-@property (nonatomic, strong) EventQualifier* eventQualifier;
-
+@property (nonatomic, strong) NSMutableArray* qualifiers;
 
 -(GameEvent*)initWithDictionary:(NSDictionary*)dictionary;
 

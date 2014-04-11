@@ -295,14 +295,14 @@
 	
 	else if ([elementName isEqualToString:@"Event"])
 	{
-		if([[attributeDict objectForKey:@"type_id"] isEqualToString:@"34"])
-		{
-			NSLog(@"lineup");
-		}
-		else if ([[attributeDict objectForKey:@"type_id"] isEqualToString:@"16"])
-		{
-			NSLog(@"Goal!");
-		}
+//		if([[attributeDict objectForKey:@"type_id"] isEqualToString:@"34"])
+//		{
+//			//NSLog(@"lineup");
+//		}
+//		else if ([[attributeDict objectForKey:@"type_id"] isEqualToString:@"16"])
+//		{
+//			//NSLog(@"Goal!");
+//		}
 		
 		GameEvent* gameEvent = [[GameEvent alloc] initWithDictionary: attributeDict];
 		
@@ -313,7 +313,7 @@
 		EventQualifier* qualifier = [[EventQualifier alloc] initWithDictionary: attributeDict];
 		GameEvent* gameEvent = gameEventArray.lastObject;
 		
-		if ([qualifier.qualifierId isEqualToString:@"130"])
+		if (qualifier.qualifierId == 130)
 		{
 			if([gameEvent.teamId isEqualToString:team1.teamId])
 			{
@@ -326,7 +326,7 @@
 		}
 		
 		
-		gameEvent.eventQualifier = qualifier;
+		[gameEvent.qualifiers addObject:qualifier];
 	}
 }
 

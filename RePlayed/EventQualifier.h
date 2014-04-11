@@ -11,7 +11,7 @@
 @interface EventQualifier : NSObject
 
 @property (nonatomic, strong) NSString* uniqueId;
-@property (nonatomic, strong) NSString* qualifierId;
+@property (assign) int qualifierId;
 @property (nonatomic, strong) NSString* value;
 
 -(EventQualifier*)initWithDictionary:(NSDictionary*)dictionary;

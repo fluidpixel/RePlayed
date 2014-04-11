@@ -79,10 +79,7 @@
 	gameTimeLabel.name = @"timeLabel";
 	[self addChild:gameTimeLabel];
 	
-	SKSpriteNode* details = [self labelNodeFromString:@"Kick Off" andSize:18];
-	details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
-	details.name = @"eventLabel";
-	[self addChild:details];
+	[self showEventDetailLabelWithString:@"KICK OFF"];
 	
 	[self pauseGameFor:2.0];
 	
@@ -100,10 +97,7 @@
 		//reset action grid
 		[actionLayer removeAllChildren];
 		
-		SKSpriteNode* details = [self labelNodeFromString:@"HALF TIME" andSize:18];
-		details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
-		details.name = @"eventLabel";
-		[self addChild:details];
+			[self showEventDetailLabelWithString:@"HALF TIME"];
 	}
 	
 	[self populateLabelwithTime:runningTime];
@@ -147,29 +141,23 @@
 	{
 		//NSLog(@"event: %02i at %02i:%02i %.01f,%.01f", nextGameEvent.eventType, nextGameEvent.min, nextGameEvent.sec, nextGameEvent.posX, nextGameEvent.posY);
 		UIColor* color;
+		CGPoint point;
 		if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
 		{
 			color = [UIColor redColor];
+			point = [self createPointonPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
 		}
 		else
 		{
 			color = [UIColor blueColor];
+			point = [self createPointonPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX];
 		}
 	
 		//ignore formations, start/stop delays from action points
-		if (nextGameEvent.eventType != 34 && nextGameEvent.eventType != 32 && nextGameEvent.eventType != 43 && nextGameEvent.eventType != 27 && nextGameEvent.eventType != 28 && nextGameEvent.eventType != 30)
+		if (nextGameEvent.eventType != 17 && nextGameEvent.eventType != 18 && nextGameEvent.eventType != 19 && nextGameEvent.eventType != 24 && nextGameEvent.eventType != 34 && nextGameEvent.eventType != 32 && nextGameEvent.eventType != 43 && nextGameEvent.eventType != 27 && nextGameEvent.eventType != 28 && nextGameEvent.eventType != 30 && nextGameEvent.eventType != 40)
 		{
-			
-			if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
-			{
-			[self addActionPointatPoint:[self createPointonPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(4,4)];
-			}
-			else
-			{
-				[self addActionPointatPoint:[self createPointonPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(4,4)];
-			}
-			
-			if (nextGameEvent.eventType == 16)
+			//goal 16, miss 13, saved attempt 15
+			if (nextGameEvent.eventType == 16 || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15)
 			{
 				if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
 				{
@@ -179,22 +167,37 @@
 				{
 					[self addActionPointatPoint:[self createPointonPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
 				}
-				[self scoredGoal:nextGameEvent];
 				
-				[ball runAction:[SKAction sequence:@[[SKAction waitForDuration:1.0],[SKAction moveTo:[self createPointonPitchWithX:50.0 andY:50.0] duration:0.1]]]];
+				if (nextGameEvent.eventType == 16)//goal
+				{
+					[self scoredGoal:nextGameEvent];
+				}
+				else if (nextGameEvent.eventType == 13)//miss
+				{
+					[self missedChance:nextGameEvent];
+				}
+				else if (nextGameEvent.eventType == 15)//save
+				{
+					[self saveEvent:nextGameEvent];
+				}
+				
+				[ball runAction:[SKAction sequence:@[[SKAction waitForDuration:1.5],[SKAction moveTo:[self createPointonPitchWithX:50.0 andY:50.0] duration:0.1]]]];
 				
 			}
 			else
 			{
-				
+				[self moveBallWithEvent:nextGameEvent andPosition:point];
+				[self addActionPointatPoint:point withColor:color andSize:CGSizeMake(4,4)];
 			}
 		}
 		
-		else if(nextGameEvent.eventType == 32 || nextGameEvent.eventType == 30)
+		//Game restarts so reset ball
+		if(nextGameEvent.eventType == 32 || nextGameEvent.eventType == 30)
 		{
 			[ball runAction:[SKAction moveTo:[self createPointonPitchWithX:50.0 andY:50.0] duration:0.1]];
 		}
 		
+		//check if there's any more events at this time
 		if (nextGameEventIndex < data.gameEventArray.count-1)
 		{
 			nextGameEventIndex++;
@@ -230,9 +233,24 @@
 	}
 	
 	[actionLayer addChild:actionPoint];
+}
+
+-(void)moveBallWithEvent:(GameEvent*)event andPosition:(CGPoint)point
+{
+	for (EventQualifier* qualifier in event.qualifiers)
+	{
+		if(qualifier.qualifierId == 155)//in the air
+		{
+			[ball runAction:
+			 [SKAction group:@[[SKAction sequence:@[[SKAction scaleTo:2.0 duration:0.1], [SKAction scaleTo:1.0 duration:0.1]]], [SKAction moveTo:point duration:0.2]]]];
+		}
+		else//along the ground
+		{
+			[ball runAction:[SKAction moveTo:point duration:0.1]];
+		}
+	}
 	
-	[ball runAction:[SKAction moveTo:point duration:0.1]];
-	
+	 
 }
 -(void)processBasicEvents
 {
@@ -274,10 +292,7 @@
 				}
 			}
 			
-			SKSpriteNode* details = [self labelNodeFromString:eventDetails andSize:14];
-			details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
-			details.name = @"eventLabel";
-			[self addChild:details];
+			[self showEventDetailLabelWithString:eventDetails];
 		}
 		
 		NSLog(@"%@! %@", nextEvent.type, nextEvent.time);
@@ -297,7 +312,7 @@
 
 -(void)scoredGoal:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:1.0];
+	[self pauseGameFor:2.0];
 	
 	if([nextEvent.teamId isEqualToString:data.team1.teamId])
 	{
@@ -327,16 +342,71 @@
 		}
 	}
 	
-	SKSpriteNode* details = [self labelNodeFromString:eventDetails andSize:14];
+	[self showEventDetailLabelWithString:eventDetails];
+	
+}
+
+-(void)missedChance:(GameEvent*)nextEvent
+{
+	[self pauseGameFor:1.0];
+	
+	NSMutableString* eventDetails;
+	
+	for(Player* player in data.playerList)
+	{
+		NSString* playerId = [NSString stringWithFormat:@"p%@", nextEvent.playerId];
+		
+		if([playerId isEqualToString:player.playerRef])
+		{
+			eventDetails = [NSMutableString stringWithFormat:@"%@ %@ %@", player.firstName, player.lastName, @"Missed"];
+			break;
+		}
+	}
+	
+	for(EventQualifier* qualifier in nextEvent.qualifiers)
+	{
+		if (qualifier.qualifierId == 15)
+		{
+			[eventDetails appendString:@" with Head"];
+		}
+	}
+	
+	[self showEventDetailLabelWithString:eventDetails];
+	
+}
+
+-(void)saveEvent:(GameEvent*)nextEvent
+{
+	[self pauseGameFor:1.0];
+	
+	NSMutableString* eventDetails;
+	
+	for(Player* player in data.playerList)
+	{
+		NSString* playerId = [NSString stringWithFormat:@"p%@", nextEvent.playerId];
+		
+		if([playerId isEqualToString:player.playerRef])
+		{
+			eventDetails = [NSMutableString stringWithFormat:@"%@ %@ %@", player.firstName, player.lastName, @"Shot Saved"];
+			break;
+		}
+	}
+	
+	[self showEventDetailLabelWithString:eventDetails];
+	
+}
+
+-(void)showEventDetailLabelWithString:(NSString*)string
+{
+	SKSpriteNode* details = [self labelNodeFromString:string andSize:14];
 	details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
 	details.name = @"eventLabel";
 	[self addChild:details];
-	
 }
 #pragma mark Timer Stuff
 -(void)pauseGameFor:(float)seconds
 {
-	NSLog(@"timer paused");
+	//NSLog(@"timer paused");
 	[gameTimer invalidate];
 	
 	//pause for x seconds before restarting timer
@@ -349,7 +419,7 @@
 	
 	if(!gameEnded)
 	{
-		NSLog(@"timer started");
+		//NSLog(@"timer started");
 		gameTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
 		
 		[[self childNodeWithName:@"eventLabel"] removeFromParent];
@@ -362,10 +432,9 @@
 	gameEnded = TRUE;
 	[gameTimer invalidate];
 	[[self childNodeWithName:@"eventLabel"] removeFromParent];
+	[actionLayer removeAllChildren];
 	
-	SKSpriteNode* endGame = [self labelNodeFromString:@"End Game" andSize:34];
-	endGame.position = CGPointMake(self.size.width/2 - endGame.size.width/2, self.size.height/2);
-	[self addChild:endGame];
+	[self showEventDetailLabelWithString:@"END GAME"];
 	
 }
 

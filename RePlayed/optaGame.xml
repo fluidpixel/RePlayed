@@ -3730,7 +3730,7 @@
       <Q id="1205408395" qualifier_id="59" value="3" />
       <Q id="2047798658" qualifier_id="44" value="Defender" />
     </Event>
-    <Event id="1325227579" event_id="456" type_id="19" period_id="2" min="45" sec="0" player_id="42663" team_id="2012" outcome="1" x="0.0" y="0.0" timestamp="2007-08-12T14:02:19.823" last_modified="2007-08-12T14:08:02">
+    <Event id="1325227579" event_id="456" type_id="19" period_id="2" min="45" sec="0" player_id="42663" team_id="2012" outcome="1" x="0.0" y="0.0" timestamp="2007-08-12T14:02:19.823" glast_modified="2007-08-12T14:08:02">
       <Q id="1914801707" qualifier_id="44" value="Defender" />
       <Q id="389373874" qualifier_id="42" />
       <Q id="1599176686" qualifier_id="145" value="3" />
