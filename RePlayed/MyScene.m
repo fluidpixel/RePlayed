@@ -11,6 +11,7 @@
 #import "Event.h"
 #import "GameEvent.h"
 
+
 @implementation MyScene
 
 -(id)initWithSize:(CGSize)size {    
@@ -25,6 +26,8 @@
 		loading.fontSize = 15;
 		loading.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
 		[self addChild:loading];
+		
+		updateRate = 0.02;
 		
 		data = [DataParser sharedData];
 		
@@ -81,7 +84,7 @@
 	
 	[self showEventDetailLabelWithString:@"KICK OFF"];
 	
-	[self pauseGameFor:2.0];
+	[self pauseGameFor:updateRate * 200];
 	
 }
 
@@ -92,7 +95,7 @@
 	//pause timer for tempTimer time to "wait" for half time
 	if (runningTime == (45 * 60))
 	{
-		[self pauseGameFor:2.0];
+		[self pauseGameFor:updateRate * 200];
 		
 		//reset action grid
 		[actionLayer removeAllChildren];
@@ -194,7 +197,7 @@
 		//Game restarts so reset ball
 		if(nextGameEvent.eventType == 32 || nextGameEvent.eventType == 30)
 		{
-			[ball runAction:[SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:0.1]];
+			[ball runAction:[SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:updateRate * 10]];
 		}
 		
 		//check if there's any more events at this time
@@ -263,15 +266,15 @@
 		if (event.eventType == 16)
 		{
 			[ball runAction:[SKAction sequence:@[
-												 [SKAction moveTo:point duration:0.1],
-												 [SKAction moveTo:goalPoint duration:0.1],[SKAction waitForDuration:1.8],
+												 [SKAction moveTo:point duration:updateRate*10],
+												 [SKAction moveTo:goalPoint duration:updateRate*10],[SKAction waitForDuration:updateRate*180],
 												 [SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:0.0]]]];
 		}
 		else //miss
 		{
 			[ball runAction:[SKAction sequence:@[
-												 [SKAction moveTo:point duration:0.1],
-												 [SKAction moveTo:goalPoint duration:0.1]]]];
+												 [SKAction moveTo:point duration:updateRate*10],
+												 [SKAction moveTo:goalPoint duration:updateRate*10]]]];
 		}
 	}
 //	else if(event.eventType == 10) //saved
@@ -307,7 +310,7 @@
 			if(qualifier.qualifierId == 155)//in the air
 			{
 				[ball runAction:
-				 [SKAction group:@[[SKAction sequence:@[[SKAction scaleTo:2.0 duration:0.1], [SKAction scaleTo:1.0 duration:0.1]]], [SKAction moveTo:point duration:0.2]]]];
+				 [SKAction group:@[[SKAction sequence:@[[SKAction scaleTo:2.0 duration:updateRate*10], [SKAction scaleTo:1.0 duration:updateRate*10]]], [SKAction moveTo:point duration:updateRate*20]]]];
 				inAir = TRUE;
 				break;
 				
@@ -315,7 +318,7 @@
 		}
 		if (!inAir)
 		{
-			[ball runAction:[SKAction moveTo:point duration:0.1]];
+			[ball runAction:[SKAction moveTo:point duration:updateRate*10]];
 		}
 	}
 	
@@ -323,7 +326,7 @@
 
 -(void)scoredGoal:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:2.0];
+	[self pauseGameFor:updateRate * 200];
 	
 	if([nextEvent.teamId isEqualToString:data.team1.teamId])
 	{
@@ -359,7 +362,7 @@
 
 -(void)missedChance:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:1.0];
+	[self pauseGameFor:updateRate * 100];
 	
 	NSMutableString* eventDetails;
 	
@@ -388,7 +391,7 @@
 
 -(void)saveEvent:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:1.0];
+	[self pauseGameFor:updateRate * 100];
 	
 	NSMutableString* eventDetails;
 	
@@ -431,7 +434,7 @@
 	if(!gameEnded)
 	{
 		//NSLog(@"timer started");
-		gameTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
+		gameTimer = [NSTimer scheduledTimerWithTimeInterval:updateRate target:self selector:@selector(updateTimer:) userInfo:nil repeats:YES];
 		
 		[[self childNodeWithName:@"eventLabel"] removeFromParent];
 	}

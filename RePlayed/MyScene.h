@@ -22,6 +22,8 @@
 	
 	SKSpriteNode* ball;
 	
+	float updateRate;
+	
 	SKNode* actionLayer;
 }
 @end
