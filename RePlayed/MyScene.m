@@ -98,7 +98,7 @@
 		[self pauseGameFor:2.0];
 		
 		//reset action grid
-		[[self childNodeWithName:@"actionLayer"] removeAllChildren];
+		[actionLayer removeAllChildren];
 		
 		SKSpriteNode* details = [self labelNodeFromString:@"HALF TIME" andSize:18];
 		details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
@@ -171,10 +171,17 @@
 			
 			if (nextGameEvent.eventType == 16)
 			{
-				[self addActionPointatPoint:[self createPointonPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+				if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
+				{
+					[self addActionPointatPoint:[self createPointonPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+				}
+				else
+				{
+					[self addActionPointatPoint:[self createPointonPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+				}
 				[self scoredGoal:nextGameEvent];
 				
-				[ball runAction:[SKAction sequence:@[[SKAction waitForDuration:1.5],[SKAction moveTo:[self createPointonPitchWithX:50.0 andY:50.0] duration:0.1]]]];
+				[ball runAction:[SKAction sequence:@[[SKAction waitForDuration:1.0],[SKAction moveTo:[self createPointonPitchWithX:50.0 andY:50.0] duration:0.1]]]];
 				
 			}
 			else
@@ -338,6 +345,8 @@
 
 -(void)startTimer:(NSTimer*)timer
 {
+	[actionLayer removeAllChildren];
+	
 	if(!gameEnded)
 	{
 		NSLog(@"timer started");
