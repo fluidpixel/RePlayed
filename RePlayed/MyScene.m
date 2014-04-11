@@ -162,8 +162,8 @@
 				point = [self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
 		}
 	
-		//ignore formations, start/stop delays from action points
-		if (nextGameEvent.eventType != 17 && nextGameEvent.eventType != 18 && nextGameEvent.eventType != 19 && nextGameEvent.eventType != 24 && nextGameEvent.eventType != 34 && nextGameEvent.eventType != 32 && nextGameEvent.eventType != 43 && nextGameEvent.eventType != 27 && nextGameEvent.eventType != 28 && nextGameEvent.eventType != 30 && nextGameEvent.eventType != 40)
+		//ignore formations, start/stop delays from action points  ball out = 5
+		if (nextGameEvent.eventType != 17 && nextGameEvent.eventType != 18 && nextGameEvent.eventType != 19 && nextGameEvent.eventType != 24 && nextGameEvent.eventType != 34 && nextGameEvent.eventType != 32 && nextGameEvent.eventType != 43 && nextGameEvent.eventType != 27 && nextGameEvent.eventType != 28 && nextGameEvent.eventType != 30 && nextGameEvent.eventType != 40 && nextGameEvent.eventType != 5)
 		{
 			
 			[self moveBallWithEvent:nextGameEvent andPosition:point];
