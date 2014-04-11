@@ -22,7 +22,7 @@
 		self.min = [[dictionary objectForKey:@"min"] intValue];
 		self.sec = [[dictionary objectForKey:@"sec"] intValue];
 		self.outcome = [dictionary objectForKey:@"outcome"];
-		self.periodId = [dictionary objectForKey:@"period_id"];
+		self.periodId = [[dictionary objectForKey:@"period_id"] intValue];
 		self.teamId = [dictionary objectForKey:@"team_id"];
 		self.timeStamp = [dictionary objectForKey:@"timedtamp"];
 		self.eventType = [[dictionary objectForKey:@"type_id"] intValue];

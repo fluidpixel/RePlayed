@@ -12,7 +12,7 @@
 @interface GameEvent : NSObject
 
 @property (nonatomic, strong) NSString* uniqueId;
-@property (nonatomic, strong) NSString* periodId;
+@property (assign) int periodId;
 @property (assign) int min;
 @property (assign) int sec;
 @property (nonatomic, strong) NSString* teamId;

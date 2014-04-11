@@ -148,12 +148,18 @@
 		if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
 		{
 			color = [UIColor redColor];
-			point = [self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
+			if(nextGameEvent.periodId == 1)
+				point = [self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
+			else
+				point = [self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX];
 		}
 		else
 		{
 			color = [UIColor blueColor];
-			point = [self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX];
+			if(nextGameEvent.periodId == 1)
+				point = [self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX];
+			else
+				point = [self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
 		}
 	
 		//ignore formations, start/stop delays from action points
@@ -167,11 +173,17 @@
 			{
 				if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
 				{
-					[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+					if(nextGameEvent.periodId == 1)
+						[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+					else
+						[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
 				}
 				else
 				{
-					[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+					if(nextGameEvent.periodId == 1)
+						[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+					else
+						[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
 				}
 				
 				if (nextGameEvent.eventType == 16)//goal
@@ -256,9 +268,20 @@
 				}
 				
 				if ([event.teamId isEqualToString:data.team1.teamId])
-					goalPoint = [self pointOnPitchWithX:[qualifier.value floatValue] andY:y];
+				{
+					if (event.periodId == 1)
+						goalPoint = [self pointOnPitchWithX:[qualifier.value floatValue] andY:y];
+					else
+						goalPoint = [self pointOnPitchWithX:[qualifier.value floatValue] andY:100-y];
+				}
 				else
-					goalPoint = [self pointOnPitchWithX:[qualifier.value floatValue] andY:100-y];
+				{
+					if (event.periodId == 1)
+						goalPoint = [self pointOnPitchWithX:[qualifier.value floatValue] andY:100-y];
+					else
+						goalPoint = [self pointOnPitchWithX:[qualifier.value floatValue] andY:y];
+				}
+				
 				break;
 			}
 		}
