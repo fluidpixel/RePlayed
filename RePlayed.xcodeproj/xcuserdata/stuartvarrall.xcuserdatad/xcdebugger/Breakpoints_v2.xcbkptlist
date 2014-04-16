@@ -36,12 +36,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RePlayed/MyScene.m"
-            timestampString = "418929001.193798"
+            timestampString = "419328632.326864"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "270"
-            endingLineNumber = "270"
-            landmarkName = "-addPlayer:atPoint:withTeam:"
+            startingLineNumber = "274"
+            endingLineNumber = "274"
+            landmarkName = "-addPlayer:atPoint:withColor:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

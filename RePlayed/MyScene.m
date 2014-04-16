@@ -100,6 +100,7 @@
 		//reset action grid
 		NSMutableArray* childrenToRemove = [NSMutableArray arrayWithArray:[actionLayer children]];
 		[childrenToRemove removeObject:[actionLayer childNodeWithName:@"players"]];
+		[[actionLayer childNodeWithName:@"players"] removeAllChildren];
 		[actionLayer removeChildrenInArray:childrenToRemove];
 		
 		[self showEventDetailLabelWithString:@"HALF TIME"];
@@ -164,30 +165,33 @@
 				point = [self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
 		}
 	
+		[self addPlayer:nextGameEvent.playerId atPoint:point withColor:color];
+		
 		//ignore formations, start/stop delays from action points  ball out = 5
 		if (nextGameEvent.eventType != 17 && nextGameEvent.eventType != 18 && nextGameEvent.eventType != 19 && nextGameEvent.eventType != 24 && nextGameEvent.eventType != 34 && nextGameEvent.eventType != 32 && nextGameEvent.eventType != 43 && nextGameEvent.eventType != 27 && nextGameEvent.eventType != 28 && nextGameEvent.eventType != 30 && nextGameEvent.eventType != 40 && nextGameEvent.eventType != 5)
 		{
 			
 			[self moveBallWithEvent:nextGameEvent andPosition:point];
-
-			[self addPlayer:nextGameEvent.playerId atPoint:point withTeam:nil];
 			
 			//goal 16, miss 13, saved attempt 15, save 10
-			if (nextGameEvent.eventType == 16 || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15) // || nextGameEvent.eventType == 10)
+			if (nextGameEvent.eventType == 16)// || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15) // || nextGameEvent.eventType == 10)
 			{
+				color = [UIColor whiteColor];
+				CGSize size = CGSizeMake(15, 15);
+				
 				if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
 				{
 					if(nextGameEvent.periodId == 1)
-						[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+						[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:size];
 					else
-						[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+						[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:size];
 				}
 				else
 				{
 					if(nextGameEvent.periodId == 1)
-						[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+						[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:size];
 					else
-						[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:CGSizeMake(10,10)];
+						[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:size];
 				}
 				
 				if (nextGameEvent.eventType == 16)//goal
@@ -206,7 +210,7 @@
 			}
 			else
 			{
-				[self addActionPointatPoint:point withColor:color andSize:CGSizeMake(4,4)];
+				//[self addActionPointatPoint:point withColor:color andSize:CGSizeMake(4,4)];
 			}
 		}
 		
@@ -254,7 +258,7 @@
 	[actionLayer addChild:actionPoint];
 }
 
--(void)addPlayer:(NSString*)playerId atPoint:(CGPoint)point withTeam:(Team*)team
+-(void)addPlayer:(NSString*)playerId atPoint:(CGPoint)point withColor:(UIColor*)color
 {
 	
 	NSString* playerNumber;
@@ -284,8 +288,9 @@
 				if ([[label.userData objectForKey:@"playerRef"] isEqualToString:playerRef])
 				{
 					[label removeAllActions];
-					[label runAction:[SKAction sequence:@[[SKAction moveTo:point duration:updateRate * 10],
-														  [SKAction waitForDuration:updateRate * 500],
+					[label runAction:[SKAction sequence:@[[SKAction moveTo:CGPointMake(point.x, point.y - label.fontSize/2) duration:updateRate * 10],
+														  [SKAction waitForDuration:updateRate * 200],
+														  [SKAction fadeAlphaBy:0.0 duration:updateRate * 300],
 														  [SKAction removeFromParent]]]];
 					
 					movedPlayer = true;
@@ -298,8 +303,9 @@
 				SKLabelNode* playerLabel = [SKLabelNode labelNodeWithFontNamed:@"Courier-Bold"];
 				playerLabel.text = playerNumber;
 				playerLabel.fontSize = 12;
-				playerLabel.position = point;
+				playerLabel.position = CGPointMake(point.x, point.y - playerLabel.fontSize/2);
 				playerLabel.name = @"playerLabel";
+				playerLabel.fontColor = color;
 				
 				NSMutableDictionary* dict = [[NSMutableDictionary alloc] initWithCapacity:1];
 				[playerLabel setUserData:dict];
@@ -308,7 +314,9 @@
 				playerLabel.zPosition = 1;
 				[playerNode addChild:playerLabel];
 				
-				[playerLabel runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 500], [SKAction removeFromParent]]]];
+				[playerLabel runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 200],
+															[SKAction fadeAlphaBy:1.0 duration:updateRate * 300],
+															[SKAction removeFromParent]]]];
 			}
 			
 			break;
