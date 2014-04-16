@@ -29,6 +29,23 @@
 		
 		updateRate = 0.02;
 		
+		SKSpriteNode* pitch = [SKSpriteNode spriteNodeWithImageNamed:@"pitch"];
+		pitch.size = CGSizeMake(self.size.width - 0, self.size.height - 120);
+		pitch.position = CGPointMake(0, 10);
+		pitch.anchorPoint = CGPointZero;
+		pitch.zPosition = -1;
+		[self addChild:pitch];
+		
+		ball = [SKSpriteNode spriteNodeWithImageNamed:@"ball"];
+		ball.position = [self pointOnPitchWithX:50.0 andY:50.0];
+		ball.zPosition = 2;
+		
+		[self addChild:ball];
+		
+		actionLayer = [[SKNode alloc] init];
+		actionLayer.name = @"actionLayer";
+		[self addChild:actionLayer];
+		
 		data = [DataParser sharedData];
 		
 		if (data.complete)
@@ -43,23 +60,6 @@
 													   object:nil];
 		}
     }
-	
-	SKSpriteNode* pitch = [SKSpriteNode spriteNodeWithImageNamed:@"pitch"];
-	pitch.size = CGSizeMake(self.size.width - 0, self.size.height - 120);
-	pitch.position = CGPointMake(0, 10);
-	pitch.anchorPoint = CGPointZero;
-	pitch.zPosition = -1;
-	[self addChild:pitch];
-	
-	ball = [SKSpriteNode spriteNodeWithImageNamed:@"ball"];
-	ball.position = [self pointOnPitchWithX:50.0 andY:50.0];
-	ball.zPosition = 2;
-	
-	[self addChild:ball];
-	
-	actionLayer = [[SKNode alloc] init];
-	actionLayer.name = @"actionLayer";
-	[self addChild:actionLayer];
 	
     return self;
 }
@@ -84,12 +84,84 @@
 	
 	[self showEventDetailLabelWithString:@"KICK OFF"];
 	
-	[self pauseGameFor:updateRate * 200];
+	[self pauseGameFor:updateRate * 100];
 	
+	[self setPlayerFormations];
+	
+}
+
+-(void)setPlayerFormations
+{
+	
+	SKNode* playerNode = [actionLayer childNodeWithName:@"players"];
+	if(!playerNode)
+	{
+		playerNode = [[SKNode alloc] init];
+		playerNode.name = @"players";
+		[actionLayer addChild:playerNode];
+	}
+	
+	for(Player* player in data.playerList)
+	{
+		BOOL existingPlayer = false;
+				
+		if (player.formationPosition != 0)
+		{
+						
+			CGPoint point;
+			if ([player.team isEqual:data.team1])
+			{
+				CGPoint playerPosition = [data.team1.formation.playerPositions[player.formationPosition - 1] CGPointValue];
+				point = [self pointOnPitchWithX:playerPosition.x andY:playerPosition.y];
+			}
+			else
+			{
+				CGPoint playerPosition = [data.team2.formation.playerPositions[player.formationPosition - 1] CGPointValue];
+				point = [self pointOnPitchWithX:100 - playerPosition.x andY:100 - playerPosition.y];
+			}
+			
+			for(SKLabelNode* label in playerNode.children)
+			{
+				if ([[label.userData objectForKey:@"playerRef"] isEqualToString:player.playerRef])
+				{
+					[label removeAllActions];
+					[label runAction:[SKAction sequence:@[[SKAction moveTo:point duration:updateRate * 10],
+														  [SKAction waitForDuration:updateRate * 200],
+														  [SKAction fadeAlphaBy:0.0 duration:updateRate * 300],
+														  [SKAction removeFromParent]]]];
+					
+					existingPlayer = true;
+					break;
+				}
+			}
+			
+			if (!existingPlayer) //if we haven't reset a player's position, then we need to create him
+			{
+				SKLabelNode* playerLabel = [SKLabelNode labelNodeWithFontNamed:@"Courier-Bold"];
+				playerLabel.text = player.shirtNumber;
+				playerLabel.fontSize = 12;
+				playerLabel.position = point;
+				playerLabel.name = @"playerLabel";
+				playerLabel.fontColor = player.team.teamColor;
+				
+				NSMutableDictionary* dict = [[NSMutableDictionary alloc] initWithCapacity:1];
+				[playerLabel setUserData:dict];
+				[[playerLabel userData] setObject:player.playerRef forKey:@"playerRef"];
+				
+				playerLabel.zPosition = 1;
+				[playerNode addChild:playerLabel];
+				
+				[playerLabel runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 200],
+															[SKAction fadeAlphaBy:1.0 duration:updateRate * 300],
+															[SKAction removeFromParent]]]];
+			}
+		}
+	}
 }
 
 -(void)updateTimer:(NSTimer *)timer
 {
+	resetPlayers = false;
 	runningTime ++;
 	
 	//pause timer for tempTimer time to "wait" for half time
@@ -100,7 +172,9 @@
 		//reset action grid
 		NSMutableArray* childrenToRemove = [NSMutableArray arrayWithArray:[actionLayer children]];
 		[childrenToRemove removeObject:[actionLayer childNodeWithName:@"players"]];
-		[[actionLayer childNodeWithName:@"players"] removeAllChildren];
+
+		[self setPlayerFormations];
+		
 		[actionLayer removeChildrenInArray:childrenToRemove];
 		
 		[self showEventDetailLabelWithString:@"HALF TIME"];
@@ -165,16 +239,14 @@
 				point = [self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
 		}
 	
-		[self addPlayer:nextGameEvent.playerId atPoint:point withColor:color];
-		
 		//ignore formations, start/stop delays from action points  ball out = 5
 		if (nextGameEvent.eventType != 17 && nextGameEvent.eventType != 18 && nextGameEvent.eventType != 19 && nextGameEvent.eventType != 24 && nextGameEvent.eventType != 34 && nextGameEvent.eventType != 32 && nextGameEvent.eventType != 43 && nextGameEvent.eventType != 27 && nextGameEvent.eventType != 28 && nextGameEvent.eventType != 30 && nextGameEvent.eventType != 40 && nextGameEvent.eventType != 5)
 		{
-			
+			[self addPlayer:nextGameEvent.playerId atPoint:point withColor:color];
 			[self moveBallWithEvent:nextGameEvent andPosition:point];
 			
 			//goal 16, miss 13, saved attempt 15, save 10
-			if (nextGameEvent.eventType == 16)// || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15) // || nextGameEvent.eventType == 10)
+			if (nextGameEvent.eventType == 16 || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15) // || nextGameEvent.eventType == 10)
 			{
 				color = [UIColor whiteColor];
 				CGSize size = CGSizeMake(15, 15);
@@ -202,9 +274,9 @@
 				{
 					[self missedChance:nextGameEvent];
 				}
-				else if (nextGameEvent.eventType == 10)//save
+				else if (nextGameEvent.eventType == 15)//save
 				{
-					//[self saveEvent:nextGameEvent];
+					[self saveEvent:nextGameEvent];
 				}
 				
 			}
@@ -218,6 +290,41 @@
 		if(nextGameEvent.eventType == 32 || nextGameEvent.eventType == 30)
 		{
 			[ball runAction:[SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:updateRate * 10]];
+		}
+		else if (nextGameEvent.eventType == 18) //player off
+		{
+			for(Player* player in data.playerList)
+			{
+				if ([player.playerRef isEqualToString:nextGameEvent.playerId])
+				{
+					NSLog(@"%@ %@ substituted Off", player.firstName, player.lastName);
+					break;
+				}
+			}
+			
+		}
+		else if (nextGameEvent.eventType == 19) //player on
+		{
+			for(Player* player in data.playerList)
+			{
+				if ([player.playerRef isEqualToString:nextGameEvent.playerId])
+				{
+					NSLog(@"%@ %@ substituted On", player.firstName, player.lastName);
+					int position = 1;
+					for (EventQualifier* qualifier in nextGameEvent.qualifiers)
+					{
+						if(qualifier.qualifierId == 145)
+						{
+							position = [qualifier.value intValue];
+							break;
+						}
+					}
+					
+					[self addPlayer:player.playerRef atPoint:[player.team.formation.playerPositions[position-1] CGPointValue] withColor:player.team.teamColor];
+
+					break;
+				}
+			}
 		}
 		
 		//check if there's any more events at this time
@@ -263,8 +370,13 @@
 	
 	NSString* playerNumber;
 	NSString* playerRef;
-	
-	playerId = [NSString stringWithFormat:@"p%@", playerId];
+	SKNode* playerNode = [actionLayer childNodeWithName:@"players"];
+	if(!playerNode)
+	{
+		playerNode = [[SKNode alloc] init];
+		playerNode.name = @"players";
+		[actionLayer addChild:playerNode];
+	}
 	
 	for(Player* player in data.playerList)
 	{
@@ -273,13 +385,7 @@
 		{
 			playerNumber = player.shirtNumber;
 			playerRef = player.playerRef;
-			SKNode* playerNode = [actionLayer childNodeWithName:@"players"];
-			if(!playerNode)
-			{
-				playerNode = [[SKNode alloc] init];
-				playerNode.name = @"players";
-				[actionLayer addChild:playerNode];
-			}
+			
 			
 			BOOL movedPlayer = false;
 			
@@ -320,6 +426,30 @@
 			}
 			
 			break;
+		}
+	}
+}
+
+-(void)removePlayerWithId:(NSString*)playerId
+{
+	SKNode* playerNode = [actionLayer childNodeWithName:@"players"];
+	if(!playerNode)
+	{
+		for(Player* player in data.playerList)
+		{
+			
+			if([playerId isEqualToString:player.playerRef])
+			{
+				for(SKLabelNode* label in playerNode.children)
+				{
+					if ([[label.userData objectForKey:@"playerRef"] isEqualToString:player.playerRef])
+					{
+						[label removeAllActions];
+						[label removeFromParent];
+						break;
+					}
+				}
+			}
 		}
 	}
 }
@@ -424,6 +554,7 @@
 -(void)scoredGoal:(GameEvent*)nextEvent
 {
 	[self pauseGameFor:updateRate * 200];
+	resetPlayers = true;
 	
 	if([nextEvent.teamId isEqualToString:data.team1.teamId])
 	{
@@ -444,9 +575,8 @@
 	
 	for(Player* player in data.playerList)
 	{
-		NSString* playerId = [NSString stringWithFormat:@"p%@", nextEvent.playerId];
-		
-		if([playerId isEqualToString:player.playerRef])
+			
+		if([nextEvent.playerId isEqualToString:player.playerRef])
 		{
 			eventDetails = [NSString stringWithFormat:@"%@ %@'s %@", player.firstName, player.lastName, @"Goal"];
 			break;
@@ -465,9 +595,9 @@
 	
 	for(Player* player in data.playerList)
 	{
-		NSString* playerId = [NSString stringWithFormat:@"p%@", nextEvent.playerId];
+		//NSString* playerId = [NSString stringWithFormat:@"p%@", nextEvent.playerId];
 		
-		if([playerId isEqualToString:player.playerRef])
+		if([nextEvent.playerId isEqualToString:player.playerRef])
 		{
 			eventDetails = [NSMutableString stringWithFormat:@"%@ %@ %@", player.firstName, player.lastName, @"Missed"];
 			break;
@@ -494,9 +624,7 @@
 	
 	for(Player* player in data.playerList)
 	{
-		NSString* playerId = [NSString stringWithFormat:@"p%@", nextEvent.playerId];
-		
-		if([playerId isEqualToString:player.playerRef])
+		if([nextEvent.playerId isEqualToString:player.playerRef])
 		{
 			eventDetails = [NSMutableString stringWithFormat:@"%@ %@ %@", player.firstName, player.lastName, @"Shot Saved"];
 			break;
@@ -512,6 +640,7 @@
 	SKSpriteNode* details = [self labelNodeFromString:string andSize:14];
 	details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
 	details.name = @"eventLabel";
+	details.zPosition = 5;
 	[self addChild:details];
 }
 #pragma mark Timer Stuff
@@ -526,9 +655,16 @@
 
 -(void)startTimer:(NSTimer*)timer
 {
+	
 	NSMutableArray* childrenToRemove = [NSMutableArray arrayWithArray:[actionLayer children]];
 	[childrenToRemove removeObject:[actionLayer childNodeWithName:@"players"]];
 	[actionLayer removeChildrenInArray:childrenToRemove];
+	
+	if (resetPlayers)
+	{
+		//TODO: this should reset back to formations rather than removing them all
+		[self setPlayerFormations];
+	}
 	
 	if(!gameEnded)
 	{

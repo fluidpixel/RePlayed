@@ -23,6 +23,9 @@
 	NSMutableArray* eventArray;
 	NSMutableArray* gameEventArray;
 	
+	NSMutableArray* team1StartingPlayers;
+	NSMutableArray* team2StartingPlayers;
+	
 	NSString* characterElement;
 	NSMutableString* elementString;
 	
@@ -30,6 +33,8 @@
 	BOOL complete;
 	
 	BOOL completedPlayerData;
+	BOOL completedInitialFormationTeam1;
+	BOOL completedInitialFormationTeam2;
 }
 
 @property (nonatomic, retain) NSMutableArray* eventArray;

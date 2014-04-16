@@ -16,7 +16,7 @@
 	
 	if (self)
 	{
-		self.playerRef = [dictionary objectForKey:@"playerRef"];
+		self.playerRef = [[dictionary objectForKey:@"playerRef"] substringToIndex:1];
 		self.firstName = [dictionary objectForKey:@"firstName"];
 		self.lastName = [dictionary objectForKey:@"lastName"];
 		self.position = [dictionary objectForKey:@"position"];
@@ -28,7 +28,7 @@
 
 -(NSString*)description
 {
-	return [NSString stringWithFormat:@"<Player: %p, playerRef: %@, position: %@, shirt: %@, name: %@ %@", self, self.playerRef, self.position, self.shirtNumber, self.firstName, self.lastName];
+	return [NSString stringWithFormat:@"<Player: %p, playerRef: %@, formationPosition: %i, shirt: %@, name: %@ %@", self, self.playerRef, self.formationPosition, self.shirtNumber, self.firstName, self.lastName];
 }
 
 @end

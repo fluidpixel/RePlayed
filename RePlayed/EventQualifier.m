@@ -24,4 +24,10 @@
 	return  self;
 }
 
+-(NSString*)description
+{
+	//<Q id="715088221" qualifier_id="140" value="52.1" />
+	return [NSString stringWithFormat:@"<Qualifier: %p, uniqueId: %@, id: %i, value: %@", self, self.uniqueId, self.qualifierId, self.value];
+}
+
 @end

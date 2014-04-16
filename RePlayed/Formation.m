@@ -20,28 +20,29 @@
 	{
 		self.formationDescription = @"442";
 		self.formationId = @"formation";
-		self.playerPositions = [[PlayerPositions alloc] init];
+		//self.playerPositions = [[PlayerPositions alloc] init];
+		self.playerPositions = [[NSMutableArray alloc] initWithCapacity:11];
 		
 //	Formation
 //	if ([formation isEqualToString:@"2"])
 //	{
 
 		NSLog(@"442 formation");
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(50, 5)]];
 		
-		self.playerPositions.player1 = CGPointMake(50, 5);
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(10, 20)]];
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(40, 20)]];
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(60, 20)]];
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(90, 20)]];
 		
-		self.playerPositions.player2 = CGPointMake(10, 20);
-		self.playerPositions.player3 = CGPointMake(40, 20);
-		self.playerPositions.player4 = CGPointMake(60, 20);
-		self.playerPositions.player5 = CGPointMake(90, 20);
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(10, 30)]];
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(40, 30)]];
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(60, 30)]];
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(90, 30)]];
 		
-		self.playerPositions.player6 = CGPointMake(10, 30);
-		self.playerPositions.player7 = CGPointMake(40, 30);
-		self.playerPositions.player8 = CGPointMake(60, 30);
-		self.playerPositions.player9 = CGPointMake(90, 30);
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(30, 45)]];
+		[self.playerPositions addObject:[NSValue valueWithCGPoint:CGPointMake(70, 45)]];
 		
-		self.playerPositions.player10 = CGPointMake(30, 45);
-		self.playerPositions.player11 = CGPointMake(70, 45);
 //	}
 	}
 	return self;

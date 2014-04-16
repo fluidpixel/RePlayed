@@ -18,7 +18,9 @@
 	int nextEventIndex;
 	int nextGameEventIndex;
 	int matchTime;
+	
 	BOOL gameEnded;
+	BOOL resetPlayers;
 	
 	SKSpriteNode* ball;
 	

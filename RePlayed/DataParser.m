@@ -151,12 +151,14 @@
 		
 		if(!firstTeam)
 		{
+			team.teamColor = [UIColor redColor];
 			team1 = team;
 			firstTeam = TRUE;
 			currentTeam = team1;
 		}
 		else
 		{
+			team.teamColor = [UIColor blueColor];
 			team2 = team;
 			firstTeam = FALSE;
 			currentTeam = team2;
@@ -235,15 +237,17 @@
 		
 		player.position = [attributeDict objectForKey:@"Position"];
 		player.shirtNumber = [attributeDict objectForKey:@"ShirtNumber"];
-		player.playerRef = [attributeDict objectForKey:@"PlayerRef"];
+		player.playerRef = [[attributeDict objectForKey:@"PlayerRef"] substringFromIndex:1];
 		player.status = [attributeDict objectForKey:@"Status"];
 
 		if(firstTeam)
 		{
+			player.team = team1;
 			[team1.players addObject:player];
 		}
 		else
 		{
+			player.team = team2;
 			[team2.players addObject:player];
 		}
 		
@@ -268,7 +272,7 @@
 		
 		for (Player* player in team1.players)
 		{
-			if([player.playerRef isEqualToString:[attributeDict objectForKey:@"uID"]])
+			if([player.playerRef isEqualToString:[[attributeDict objectForKey:@"uID"] substringFromIndex:1]])
 			{
 				currentPlayerIndex = [team1.players indexOfObject:player];
 				currentPlayer = player;
@@ -277,7 +281,7 @@
 		}
 		for (Player* player in team2.players)
 		{
-			if([player.playerRef isEqualToString:[attributeDict objectForKey:@"uID"]])
+			if([player.playerRef isEqualToString:[[attributeDict objectForKey:@"uID"] substringFromIndex:1]])
 			{
 				currentPlayerIndex = [team1.players indexOfObject:player];
 				currentPlayer = player;
@@ -322,6 +326,64 @@
 			else
 			{
 				team2.formation = [[Formation alloc] initWithFormation:[attributeDict objectForKey:@"value"]];
+			}
+		}
+		else if(qualifier.qualifierId == 30)//players on team
+		{
+			if([gameEvent.teamId isEqualToString:team1.teamId])
+			{
+				team1StartingPlayers = [[NSMutableArray alloc] initWithArray:[[attributeDict objectForKey:@"value"] componentsSeparatedByString:@", "]];
+			}
+			else
+			{
+				
+				team2StartingPlayers = [[NSMutableArray alloc] initWithArray:[[attributeDict objectForKey:@"value"] componentsSeparatedByString:@", "]];
+			}
+		}
+		else if(qualifier.qualifierId == 131)
+		{
+//			<Q id="1665863226" qualifier_id="30" value="14056, 20779, 9895, 17839, 21104, 17561, 5064, 404r30, 8987, 12888, 26741, 4762, 25249, 42663, 37187, 37583, 17860, 25183" />
+//			<Q id="1079911436" qualifier_id="131" value="1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 0, 0, 0, 0, 0, 0" />
+			//set player formations
+			NSArray* lineup = [[NSArray alloc] initWithArray:[[attributeDict objectForKey:@"value"] componentsSeparatedByString:@", "]];
+			
+			if([gameEvent.teamId isEqualToString:team1.teamId])
+			{
+				if(!completedInitialFormationTeam1)
+				{
+					for (int i = 0; i < team1StartingPlayers.count; i++)
+					{
+						NSString* playerRef = team1StartingPlayers[i];
+						for(Player* player in team1.players)
+						{
+							if ([player.playerRef isEqualToString:playerRef])
+							{
+								player.formationPosition = [lineup[i] intValue];
+								break;
+							}
+						}
+					}
+					completedInitialFormationTeam1 = true;
+				}
+			}
+			else
+			{
+				if(!completedInitialFormationTeam2)
+				{
+					for (int i = 0; i < team2StartingPlayers.count; i++)
+					{
+						NSString* playerRef = team2StartingPlayers[i];
+						for(Player* player in team2.players)
+						{
+							if ([player.playerRef isEqualToString:playerRef])
+							{
+								player.formationPosition = [lineup[i] intValue];
+								break;
+							}
+						}
+					}
+					completedInitialFormationTeam2 = true;
+				}
 			}
 		}
 		

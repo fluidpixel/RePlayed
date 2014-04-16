@@ -15,6 +15,6 @@
 
 @property (nonatomic, strong) NSString* formationId;
 @property (nonatomic, strong) NSString* formationDescription;
-@property (nonatomic, strong) PlayerPositions* playerPositions;
+@property (nonatomic, strong) NSMutableArray* playerPositions;
 
 @end

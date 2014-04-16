@@ -18,5 +18,5 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *teamId;
 @property (nonatomic, strong) Formation *formation;
-
+@property (nonatomic, strong) UIColor *teamColor;
 @end
