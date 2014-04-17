@@ -82,7 +82,7 @@
 	gameTimeLabel.name = @"timeLabel";
 	[self addChild:gameTimeLabel];
 	
-	[self showEventDetailLabelWithString:@"KICK OFF"];
+	[self showEventDetailLabelWithString:@"KICK OFF" andColor:[UIColor whiteColor]];
 	
 	[self pauseGameFor:updateRate * 100];
 	
@@ -179,7 +179,7 @@
 		
 		[actionLayer removeChildrenInArray:childrenToRemove];
 		
-		[self showEventDetailLabelWithString:@"HALF TIME"];
+		[self showEventDetailLabelWithString:@"HALF TIME" andColor:[UIColor whiteColor]];
 	}
 	
 	[self populateLabelwithTime:runningTime];
@@ -321,6 +321,7 @@
 				if ([player.playerRef isEqualToString:nextGameEvent.playerId])
 				{
 					NSLog(@"%@ %@ substituted Off", player.firstName, player.lastName);
+					[self removePlayerWithId:player.playerRef];
 					break;
 				}
 			}
@@ -467,11 +468,10 @@
 -(void)removePlayerWithId:(NSString*)playerId
 {
 	SKNode* playerNode = [actionLayer childNodeWithName:@"players"];
-	if(!playerNode)
+	if(playerNode)
 	{
 		for(Player* player in data.playerList)
 		{
-			
 			if([playerId isEqualToString:player.playerRef])
 			{
 				for(SKLabelNode* label in playerNode.children)
@@ -644,6 +644,7 @@
 	}
 	
 	NSString* eventDetails;
+	UIColor* color = [UIColor whiteColor];
 	
 	for(Player* player in data.playerList)
 	{
@@ -651,11 +652,12 @@
 		if([nextEvent.playerId isEqualToString:player.playerRef])
 		{
 			eventDetails = [NSString stringWithFormat:@"%@ %@'s %@", player.firstName, player.lastName, @"Goal"];
+			color = player.team.teamColor;
 			break;
 		}
 	}
 	
-	[self showEventDetailLabelWithString:eventDetails];
+	[self showEventDetailLabelWithString:eventDetails andColor:color];
 	
 }
 
@@ -664,7 +666,7 @@
 	[self pauseGameFor:updateRate * 100];
 	
 	NSMutableString* eventDetails;
-	
+	UIColor* color = [UIColor whiteColor];
 	for(Player* player in data.playerList)
 	{
 		//NSString* playerId = [NSString stringWithFormat:@"p%@", nextEvent.playerId];
@@ -672,6 +674,7 @@
 		if([nextEvent.playerId isEqualToString:player.playerRef])
 		{
 			eventDetails = [NSMutableString stringWithFormat:@"%@ %@ %@", player.firstName, player.lastName, @"Missed"];
+			color = player.team.teamColor;
 			break;
 		}
 	}
@@ -684,7 +687,7 @@
 		}
 	}
 	
-	[self showEventDetailLabelWithString:eventDetails];
+	[self showEventDetailLabelWithString:eventDetails andColor:color];
 	
 }
 
@@ -693,17 +696,19 @@
 	//[self pauseGameFor:updateRate * 100];
 	
 	NSMutableString* eventDetails;
+	UIColor* color = [UIColor whiteColor];
 	
 	for(Player* player in data.playerList)
 	{
 		if([nextEvent.playerId isEqualToString:player.playerRef])
 		{
 			eventDetails = [NSMutableString stringWithFormat:@"%@ %@ %@", player.firstName, player.lastName, @"Shot Saved"];
+			color = player.team.teamColor;
 			break;
 		}
 	}
 	
-	[self showEventDetailLabelWithString:eventDetails];
+	[self showEventDetailLabelWithString:eventDetails andColor:color];
 	
 }
 
@@ -731,12 +736,13 @@
 	[self pauseGameFor:updateRate * 50];
 	
 	NSMutableString* eventDetails;
-	
+	UIColor* color = [UIColor whiteColor];
 	for(Player* player in data.playerList)
 	{
 		if([nextEvent.playerId isEqualToString:player.playerRef])
 		{
 			eventDetails = [NSMutableString stringWithFormat:@"%@ %@ %@", player.firstName, player.lastName, @"Fouled"];
+			color = player.team.teamColor;
 			break;
 		}
 	}
@@ -757,14 +763,15 @@
 		}
 	}
 	
-	[self showEventDetailLabelWithString:eventDetails];
+	[self showEventDetailLabelWithString:eventDetails andColor:color];
 	
 }
--(void)showEventDetailLabelWithString:(NSString*)string
+-(void)showEventDetailLabelWithString:(NSString*)string andColor:(UIColor*)color
 {
 	SKSpriteNode* details = [self labelNodeFromString:string andSize:14];
 	details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
 	details.name = @"eventLabel";
+	details.color = color;
 	details.zPosition = 5;
 	[self addChild:details];
 }
@@ -810,7 +817,7 @@
 	[childrenToRemove removeObject:[actionLayer childNodeWithName:@"players"]];
 	[actionLayer removeChildrenInArray:childrenToRemove];
 	
-	[self showEventDetailLabelWithString:@"END GAME"];
+	[self showEventDetailLabelWithString:@"END GAME" andColor:[UIColor whiteColor]];
 	
 }
 
