@@ -76,13 +76,15 @@
 	nextEventIndex = 0;
 	nextGameEventIndex = 0;
 	
+	currentGameEvent = [data.gameEventArray objectAtIndex:0];
+	
 	matchTime = 91*60;
 	SKSpriteNode* gameTimeLabel = [self labelNodeFromString:@"00:00" andSize:30];
 	gameTimeLabel.position = CGPointMake(self.size.width/2 - gameTimeLabel.size.width/2, self.size.height - 95);
 	gameTimeLabel.name = @"timeLabel";
 	[self addChild:gameTimeLabel];
 	
-	[self showEventDetailLabelWithString:@"KICK OFF" andColor:[UIColor whiteColor]];
+	[self showEventDetailLabelWithString:@"KICK OFF" andColor:[UIColor clearColor]];
 	
 	[self pauseGameFor:updateRate * 100];
 	
@@ -112,12 +114,29 @@
 			if ([player.team isEqual:data.team1])
 			{
 				CGPoint playerPosition = [data.team1.formation.playerPositions[player.formationPosition - 1] CGPointValue];
-				point = [self pointOnPitchWithX:playerPosition.x andY:playerPosition.y];
+				// first half = 1, pre match = 16, first extra time = 3
+				if (currentGameEvent.periodId == 1 || currentGameEvent.periodId == 16 || currentGameEvent.periodId == 3)
+				{
+					point = [self pointOnPitchWithX:playerPosition.x andY:playerPosition.y];
+				}
+				else
+				{
+					point = [self pointOnPitchWithX:100-playerPosition.x andY:100-playerPosition.y];
+				}
 			}
 			else
 			{
 				CGPoint playerPosition = [data.team2.formation.playerPositions[player.formationPosition - 1] CGPointValue];
-				point = [self pointOnPitchWithX:100 - playerPosition.x andY:100 - playerPosition.y];
+								// first half = 1, pre match = 16, first extra time = 3
+				if (currentGameEvent.periodId == 1 || currentGameEvent.periodId == 16 || currentGameEvent.periodId == 3)
+				{
+					point = [self pointOnPitchWithX:100 - playerPosition.x andY:100 - playerPosition.y];
+				}
+				else
+				{
+					point = [self pointOnPitchWithX:playerPosition.x andY:playerPosition.y];
+				}
+				
 			}
 			
 			for(SKLabelNode* label in playerNode.children)
@@ -127,10 +146,7 @@
 					[label removeAllActions];
 					[label setAlpha:1.0];
 					
-					[label runAction:[SKAction sequence:@[[SKAction moveTo:point duration:updateRate * 10],
-														  [SKAction waitForDuration:updateRate * 200],
-														  [SKAction fadeAlphaBy:0.0 duration:updateRate * 300],
-														  [SKAction removeFromParent]]]];
+					[label runAction:[SKAction sequence:@[[SKAction moveTo:point duration:updateRate * 10]]]];
 					
 					existingPlayer = true;
 					break;
@@ -153,9 +169,7 @@
 				playerLabel.zPosition = 1;
 				[playerNode addChild:playerLabel];
 				
-				[playerLabel runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 200],
-															[SKAction fadeAlphaBy:1.0 duration:updateRate * 300],
-															[SKAction removeFromParent]]]];
+				[playerLabel runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 200]]]];
 			}
 		}
 	}
@@ -179,7 +193,7 @@
 		
 		[actionLayer removeChildrenInArray:childrenToRemove];
 		
-		[self showEventDetailLabelWithString:@"HALF TIME" andColor:[UIColor whiteColor]];
+		[self showEventDetailLabelWithString:@"HALF TIME" andColor:[UIColor clearColor]];
 	}
 	
 	[self populateLabelwithTime:runningTime];
@@ -198,14 +212,14 @@
 
 -(void)processDetailedEvents
 {
-	GameEvent* nextGameEvent = [data.gameEventArray objectAtIndex:nextGameEventIndex];
+	currentGameEvent = [data.gameEventArray objectAtIndex:nextGameEventIndex];
 	
-	while(nextGameEvent.min == 0 && nextGameEvent.sec == 0)
+	while(currentGameEvent.min == 0 && currentGameEvent.sec == 0)
 	{
 		if(nextGameEventIndex < data.gameEventArray.count-1)
 		{
 			nextGameEventIndex++;
-			nextGameEvent = [data.gameEventArray objectAtIndex:nextGameEventIndex];
+			currentGameEvent = [data.gameEventArray objectAtIndex:nextGameEventIndex];
 		}
 		else
 		{
@@ -219,82 +233,82 @@
     seconds -= minutes * 60;
     seconds = floorf(seconds);
 	
-	while(minutes == nextGameEvent.min && seconds == nextGameEvent.sec)
+	while(minutes == currentGameEvent.min && seconds == currentGameEvent.sec)
 	{
 		//NSLog(@"event: %02i at %02i:%02i %.01f,%.01f", nextGameEvent.eventType, nextGameEvent.min, nextGameEvent.sec, nextGameEvent.posX, nextGameEvent.posY);
 		UIColor* color;
 		CGPoint point;
-		if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
+		if ([currentGameEvent.teamId isEqualToString:data.team1.teamId])
 		{
 			color = [UIColor redColor];
-			if(nextGameEvent.periodId == 1)
-				point = [self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
+			if(currentGameEvent.periodId == 1)
+				point = [self pointOnPitchWithX:currentGameEvent.posY andY:currentGameEvent.posX];
 			else
-				point = [self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX];
+				point = [self pointOnPitchWithX:100-currentGameEvent.posY andY:100-currentGameEvent.posX];
 		}
 		else
 		{
 			color = [UIColor blueColor];
-			if(nextGameEvent.periodId == 1)
-				point = [self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX];
+			if(currentGameEvent.periodId == 1)
+				point = [self pointOnPitchWithX:100-currentGameEvent.posY andY:100-currentGameEvent.posX];
 			else
-				point = [self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX];
+				point = [self pointOnPitchWithX:currentGameEvent.posY andY:currentGameEvent.posX];
 		}
 	
 		//ignore formations, start/stop delays from action points  ball out = 5
-		if (nextGameEvent.eventType != 17 && nextGameEvent.eventType != 18 && nextGameEvent.eventType != 19 && nextGameEvent.eventType != 24 && nextGameEvent.eventType != 34 && nextGameEvent.eventType != 32 && nextGameEvent.eventType != 43 && nextGameEvent.eventType != 27 && nextGameEvent.eventType != 28 && nextGameEvent.eventType != 30 && nextGameEvent.eventType != 40 && nextGameEvent.eventType != 5)
+		if (currentGameEvent.eventType != 17 && currentGameEvent.eventType != 18 && currentGameEvent.eventType != 19 && currentGameEvent.eventType != 24 && currentGameEvent.eventType != 34 && currentGameEvent.eventType != 32 && currentGameEvent.eventType != 43 && currentGameEvent.eventType != 27 && currentGameEvent.eventType != 28 && currentGameEvent.eventType != 30 && currentGameEvent.eventType != 40 && currentGameEvent.eventType != 5)
 		{
-			[self addPlayer:nextGameEvent.playerId atPoint:point withColor:color];
-			[self moveBallWithEvent:nextGameEvent andPosition:point];
+			[self addPlayer:currentGameEvent.playerId atPoint:point withColor:color];
+			[self moveBallWithEvent:currentGameEvent andPosition:point];
 			
 			//goal 16, miss 13, saved attempt 15, save 10
-			if (nextGameEvent.eventType == 16 || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15 || nextGameEvent.eventType == 10)
+			if (currentGameEvent.eventType == 16 || currentGameEvent.eventType == 13 || currentGameEvent.eventType == 15 || currentGameEvent.eventType == 10)
 			{
 				color = [UIColor whiteColor];
 				CGSize size = CGSizeMake(15, 15);
 				
 				//show an action marker, but not for the keeper's save
-				if (nextGameEvent.eventType != 10)
+				if (currentGameEvent.eventType != 10)
 				{
-					if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
+					if ([currentGameEvent.teamId isEqualToString:data.team1.teamId])
 					{
-						if(nextGameEvent.periodId == 1)
-							[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:size];
+						if(currentGameEvent.periodId == 1)
+							[self addActionPointatPoint:[self pointOnPitchWithX:currentGameEvent.posY andY:currentGameEvent.posX] withColor:color andSize:size];
 						else
-							[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:size];
+							[self addActionPointatPoint:[self pointOnPitchWithX:100-currentGameEvent.posY andY:100-currentGameEvent.posX] withColor:color andSize:size];
 					}
 					else
 					{
-						if(nextGameEvent.periodId == 1)
-							[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:size];
+						if(currentGameEvent.periodId == 1)
+							[self addActionPointatPoint:[self pointOnPitchWithX:100-currentGameEvent.posY andY:100-currentGameEvent.posX] withColor:color andSize:size];
 						else
-							[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:size];
+							[self addActionPointatPoint:[self pointOnPitchWithX:currentGameEvent.posY andY:currentGameEvent.posX] withColor:color andSize:size];
 					}
 				}
 				
-				if (nextGameEvent.eventType == 16)//goal
+				if (currentGameEvent.eventType == 16)//goal
 				{
-					[self scoredGoal:nextGameEvent];
+					[self scoredGoal:currentGameEvent];
 				}
-				else if (nextGameEvent.eventType == 13)//miss
+				else if (currentGameEvent.eventType == 13)//miss
 				{
-					[self missedChance:nextGameEvent];
+					[self missedChance:currentGameEvent];
 				}
-				else if (nextGameEvent.eventType == 15)//saved Shot
+				else if (currentGameEvent.eventType == 15)//saved Shot
 				{
-					[self saveEvent:nextGameEvent];
+					[self saveEvent:currentGameEvent];
 				}
-				else if (nextGameEvent.eventType == 10)//keeper save
+				else if (currentGameEvent.eventType == 10)//keeper save
 				{
-					[self keeperSaveEvent:nextGameEvent];
+					[self keeperSaveEvent:currentGameEvent];
 				}
 				
 			}
-			else if (nextGameEvent.eventType == 4) //foul
+			else if (currentGameEvent.eventType == 4) //foul
 			{
-				if (nextGameEvent.outcome == 1)
+				if (currentGameEvent.outcome == 1)
 				{
-					[self foulEvent:nextGameEvent];
+					[self foulEvent:currentGameEvent];
 				}
 				
 			}
@@ -306,19 +320,19 @@
 		
 		
 		//Game restart events, so reset ball
-		if(nextGameEvent.eventType == 32 || nextGameEvent.eventType == 30)
+		if(currentGameEvent.eventType == 32 || currentGameEvent.eventType == 30)
 		{
 			[ball runAction:[SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:updateRate * 10]];
 		}
-		else if (nextGameEvent.eventType == 17)
+		else if (currentGameEvent.eventType == 17)
 		{
-			[self foulEvent:nextGameEvent];
+			[self foulEvent:currentGameEvent];
 		}
-		else if (nextGameEvent.eventType == 18) //player off
+		else if (currentGameEvent.eventType == 18) //player off
 		{
 			for(Player* player in data.playerList)
 			{
-				if ([player.playerRef isEqualToString:nextGameEvent.playerId])
+				if ([player.playerRef isEqualToString:currentGameEvent.playerId])
 				{
 					NSLog(@"%@ %@ substituted Off", player.firstName, player.lastName);
 					[self removePlayerWithId:player.playerRef];
@@ -327,15 +341,15 @@
 			}
 			
 		}
-		else if (nextGameEvent.eventType == 19) //player on
+		else if (currentGameEvent.eventType == 19) //player on
 		{
 			for(Player* player in data.playerList)
 			{
-				if ([player.playerRef isEqualToString:nextGameEvent.playerId])
+				if ([player.playerRef isEqualToString:currentGameEvent.playerId])
 				{
 					NSLog(@"%@ %@ substituted On", player.firstName, player.lastName);
 					int position = 1;
-					for (EventQualifier* qualifier in nextGameEvent.qualifiers)
+					for (EventQualifier* qualifier in currentGameEvent.qualifiers)
 					{
 						if(qualifier.qualifierId == 145)
 						{
@@ -356,11 +370,11 @@
 		if (nextGameEventIndex < data.gameEventArray.count-1)
 		{
 			nextGameEventIndex++;
-			nextGameEvent = [data.gameEventArray objectAtIndex:nextGameEventIndex];
+			currentGameEvent = [data.gameEventArray objectAtIndex:nextGameEventIndex];
 		}
 		else
 		{
-			nextGameEvent = nil;
+			currentGameEvent = nil;
 			break;
 		}
 	}
@@ -415,12 +429,29 @@
 			if ([player.team isEqual:data.team1])
 			{
 				CGPoint playerPosition = [data.team1.formation.playerPositions[player.formationPosition - 1] CGPointValue];
-				playerFormationPoint = [self pointOnPitchWithX:playerPosition.x andY:playerPosition.y];
+				
+				if (currentGameEvent.periodId == 1)
+				{
+					playerFormationPoint = [self pointOnPitchWithX:playerPosition.x andY:playerPosition.y];
+				}
+				else
+				{
+					playerFormationPoint = [self pointOnPitchWithX:100-playerPosition.x andY:100-playerPosition.y];
+				}
 			}
 			else
 			{
 				CGPoint playerPosition = [data.team2.formation.playerPositions[player.formationPosition - 1] CGPointValue];
-				playerFormationPoint = [self pointOnPitchWithX:100 - playerPosition.x andY:100 - playerPosition.y];
+				if (currentGameEvent.periodId == 1)
+				{
+					playerFormationPoint = [self pointOnPitchWithX:100 - playerPosition.x andY:100 - playerPosition.y];
+				}
+				else
+				{
+					playerFormationPoint = [self pointOnPitchWithX:playerPosition.x andY:playerPosition.y];
+				}
+				
+				
 			}
 			
 			BOOL movedPlayer = false;
@@ -644,7 +675,7 @@
 	}
 	
 	NSString* eventDetails;
-	UIColor* color = [UIColor whiteColor];
+	UIColor* color = [UIColor clearColor];
 	
 	for(Player* player in data.playerList)
 	{
@@ -666,7 +697,7 @@
 	[self pauseGameFor:updateRate * 100];
 	
 	NSMutableString* eventDetails;
-	UIColor* color = [UIColor whiteColor];
+	UIColor* color = [UIColor clearColor];
 	for(Player* player in data.playerList)
 	{
 		//NSString* playerId = [NSString stringWithFormat:@"p%@", nextEvent.playerId];
@@ -696,7 +727,7 @@
 	//[self pauseGameFor:updateRate * 100];
 	
 	NSMutableString* eventDetails;
-	UIColor* color = [UIColor whiteColor];
+	UIColor* color = [UIColor clearColor];
 	
 	for(Player* player in data.playerList)
 	{
@@ -736,7 +767,7 @@
 	[self pauseGameFor:updateRate * 50];
 	
 	NSMutableString* eventDetails;
-	UIColor* color = [UIColor whiteColor];
+	UIColor* color = [UIColor clearColor];
 	for(Player* player in data.playerList)
 	{
 		if([nextEvent.playerId isEqualToString:player.playerRef])
@@ -817,7 +848,7 @@
 	[childrenToRemove removeObject:[actionLayer childNodeWithName:@"players"]];
 	[actionLayer removeChildrenInArray:childrenToRemove];
 	
-	[self showEventDetailLabelWithString:@"END GAME" andColor:[UIColor whiteColor]];
+	[self showEventDetailLabelWithString:@"END GAME" andColor:[UIColor clearColor]];
 	
 }
 

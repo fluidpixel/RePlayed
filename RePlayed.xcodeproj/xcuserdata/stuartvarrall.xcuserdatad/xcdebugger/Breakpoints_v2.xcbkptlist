@@ -37,27 +37,11 @@
             condition = "[nextGameEvent.playerId isEqualToString:@&quot;18193&quot;]"
             continueAfterRunningActions = "No"
             filePath = "RePlayed/MyScene.m"
-            timestampString = "419355324.550996"
+            timestampString = "419426981.409916"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "247"
-            endingLineNumber = "247"
-            landmarkName = "-processDetailedEvents"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "RePlayed/MyScene.m"
-            timestampString = "419422861.538421"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "315"
-            endingLineNumber = "315"
+            startingLineNumber = "259"
+            endingLineNumber = "259"
             landmarkName = "-processDetailedEvents"
             landmarkType = "5">
          </BreakpointContent>

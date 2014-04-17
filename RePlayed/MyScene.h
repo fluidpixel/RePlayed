@@ -8,6 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "DataParser.h"
+#import "GameEvent.h"
 
 @interface MyScene : SKScene
 {
@@ -17,6 +18,8 @@
 		
 	int nextEventIndex;
 	int nextGameEventIndex;
+	GameEvent* currentGameEvent;
+	
 	int matchTime;
 	
 	BOOL gameEnded;
