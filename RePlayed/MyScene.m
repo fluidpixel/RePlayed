@@ -290,13 +290,9 @@
 				}
 				
 			}
-			else if (nextGameEvent.eventType == 4 || nextGameEvent.eventType == 17) //foul
+			else if (nextGameEvent.eventType == 4) //foul
 			{
-				if (nextGameEvent.eventType == 17)
-				{
-					[self foulEvent:nextGameEvent];
-				}
-				else if (nextGameEvent.outcome == 1)
+				if (nextGameEvent.outcome == 1)
 				{
 					[self foulEvent:nextGameEvent];
 				}
@@ -308,10 +304,15 @@
 			}
 		}
 		
+		
 		//Game restart events, so reset ball
 		if(nextGameEvent.eventType == 32 || nextGameEvent.eventType == 30)
 		{
 			[ball runAction:[SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:updateRate * 10]];
+		}
+		else if (nextGameEvent.eventType == 17)
+		{
+			[self foulEvent:nextGameEvent];
 		}
 		else if (nextGameEvent.eventType == 18) //player off
 		{
@@ -338,6 +339,7 @@
 						if(qualifier.qualifierId == 145)
 						{
 							position = [qualifier.value intValue];
+							player.formationPosition = position;
 							break;
 						}
 					}
