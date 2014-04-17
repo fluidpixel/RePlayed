@@ -16,7 +16,7 @@
 @property (assign) int min;
 @property (assign) int sec;
 @property (nonatomic, strong) NSString* teamId;
-@property (nonatomic, strong) NSString* outcome;
+@property (assign) int outcome;
 @property (nonatomic, strong) NSString* timeStamp;
 @property (nonatomic, strong) NSString* lastModified;
 @property (nonatomic, strong) NSString* eventId;

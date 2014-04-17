@@ -290,6 +290,18 @@
 				}
 				
 			}
+			else if (nextGameEvent.eventType == 4 || nextGameEvent.eventType == 17) //foul
+			{
+				if (nextGameEvent.eventType == 17)
+				{
+					[self foulEvent:nextGameEvent];
+				}
+				else if (nextGameEvent.outcome == 1)
+				{
+					[self foulEvent:nextGameEvent];
+				}
+				
+			}
 			else
 			{
 				//[self addActionPointatPoint:point withColor:color andSize:CGSizeMake(4,4)];
@@ -703,6 +715,40 @@
 	
 }
 
+-(void)foulEvent:(GameEvent*)nextEvent
+{
+	[self pauseGameFor:updateRate * 50];
+	
+	NSMutableString* eventDetails;
+	
+	for(Player* player in data.playerList)
+	{
+		if([nextEvent.playerId isEqualToString:player.playerRef])
+		{
+			eventDetails = [NSMutableString stringWithFormat:@"%@ %@ %@", player.firstName, player.lastName, @"Fouled"];
+			break;
+		}
+	}
+	
+	for(EventQualifier* qualifier in nextEvent.qualifiers)
+	{
+		if(qualifier.qualifierId == 31)
+		{
+			[eventDetails appendString:@". Yellow Card"];
+		}
+		else if(qualifier.qualifierId == 32)
+		{
+			[eventDetails appendString:@". Second Yellow Card"];
+		}
+		else if(qualifier.qualifierId == 33)
+		{
+			[eventDetails appendString:@". Red Card!"];
+		}
+	}
+	
+	[self showEventDetailLabelWithString:eventDetails];
+	
+}
 -(void)showEventDetailLabelWithString:(NSString*)string
 {
 	SKSpriteNode* details = [self labelNodeFromString:string andSize:14];
