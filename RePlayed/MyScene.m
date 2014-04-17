@@ -408,6 +408,17 @@
 			playerNumber = player.shirtNumber;
 			playerRef = player.playerRef;
 			
+			CGPoint playerFormationPoint;
+			if ([player.team isEqual:data.team1])
+			{
+				CGPoint playerPosition = [data.team1.formation.playerPositions[player.formationPosition - 1] CGPointValue];
+				playerFormationPoint = [self pointOnPitchWithX:playerPosition.x andY:playerPosition.y];
+			}
+			else
+			{
+				CGPoint playerPosition = [data.team2.formation.playerPositions[player.formationPosition - 1] CGPointValue];
+				playerFormationPoint = [self pointOnPitchWithX:100 - playerPosition.x andY:100 - playerPosition.y];
+			}
 			
 			BOOL movedPlayer = false;
 			
@@ -419,8 +430,7 @@
 					[label setAlpha:1.0];
 					[label runAction:[SKAction sequence:@[[SKAction moveTo:CGPointMake(point.x, point.y - label.fontSize/2) duration:updateRate * 10],
 														  [SKAction waitForDuration:updateRate * 200],
-														  [SKAction fadeAlphaTo:0.0 duration:updateRate * 300],
-														  [SKAction removeFromParent]]]];
+														  [SKAction moveTo:playerFormationPoint duration:updateRate * 50]]]];
 					
 					movedPlayer = true;
 					break;
@@ -444,8 +454,7 @@
 				[playerNode addChild:playerLabel];
 				
 				[playerLabel runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 200],
-															[SKAction fadeAlphaTo:0.0 duration:updateRate * 300],
-															[SKAction removeFromParent]]]];
+															[SKAction moveTo:playerFormationPoint duration:updateRate * 50]]]];
 			}
 			
 			break;
