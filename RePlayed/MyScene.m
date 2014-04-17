@@ -125,6 +125,8 @@
 				if ([[label.userData objectForKey:@"playerRef"] isEqualToString:player.playerRef])
 				{
 					[label removeAllActions];
+					[label setAlpha:1.0];
+					
 					[label runAction:[SKAction sequence:@[[SKAction moveTo:point duration:updateRate * 10],
 														  [SKAction waitForDuration:updateRate * 200],
 														  [SKAction fadeAlphaBy:0.0 duration:updateRate * 300],
@@ -246,24 +248,28 @@
 			[self moveBallWithEvent:nextGameEvent andPosition:point];
 			
 			//goal 16, miss 13, saved attempt 15, save 10
-			if (nextGameEvent.eventType == 16 || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15) // || nextGameEvent.eventType == 10)
+			if (nextGameEvent.eventType == 16 || nextGameEvent.eventType == 13 || nextGameEvent.eventType == 15 || nextGameEvent.eventType == 10)
 			{
 				color = [UIColor whiteColor];
 				CGSize size = CGSizeMake(15, 15);
 				
-				if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
+				//show an action marker, but not for the keeper's save
+				if (nextGameEvent.eventType != 10)
 				{
-					if(nextGameEvent.periodId == 1)
-						[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:size];
+					if ([nextGameEvent.teamId isEqualToString:data.team1.teamId])
+					{
+						if(nextGameEvent.periodId == 1)
+							[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:size];
+						else
+							[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:size];
+					}
 					else
-						[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:size];
-				}
-				else
-				{
-					if(nextGameEvent.periodId == 1)
-						[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:size];
-					else
-						[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:size];
+					{
+						if(nextGameEvent.periodId == 1)
+							[self addActionPointatPoint:[self pointOnPitchWithX:100-nextGameEvent.posY andY:100-nextGameEvent.posX] withColor:color andSize:size];
+						else
+							[self addActionPointatPoint:[self pointOnPitchWithX:nextGameEvent.posY andY:nextGameEvent.posX] withColor:color andSize:size];
+					}
 				}
 				
 				if (nextGameEvent.eventType == 16)//goal
@@ -274,9 +280,13 @@
 				{
 					[self missedChance:nextGameEvent];
 				}
-				else if (nextGameEvent.eventType == 15)//save
+				else if (nextGameEvent.eventType == 15)//saved Shot
 				{
 					[self saveEvent:nextGameEvent];
+				}
+				else if (nextGameEvent.eventType == 10)//keeper save
+				{
+					[self keeperSaveEvent:nextGameEvent];
 				}
 				
 			}
@@ -394,9 +404,10 @@
 				if ([[label.userData objectForKey:@"playerRef"] isEqualToString:playerRef])
 				{
 					[label removeAllActions];
+					[label setAlpha:1.0];
 					[label runAction:[SKAction sequence:@[[SKAction moveTo:CGPointMake(point.x, point.y - label.fontSize/2) duration:updateRate * 10],
 														  [SKAction waitForDuration:updateRate * 200],
-														  [SKAction fadeAlphaBy:0.0 duration:updateRate * 300],
+														  [SKAction fadeAlphaTo:0.0 duration:updateRate * 300],
 														  [SKAction removeFromParent]]]];
 					
 					movedPlayer = true;
@@ -421,7 +432,7 @@
 				[playerNode addChild:playerLabel];
 				
 				[playerLabel runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 200],
-															[SKAction fadeAlphaBy:1.0 duration:updateRate * 300],
+															[SKAction fadeAlphaTo:0.0 duration:updateRate * 300],
 															[SKAction removeFromParent]]]];
 			}
 			
@@ -465,10 +476,10 @@
 		{
 			if (qualifier.qualifierId == 102)
 			{
-				float y = 0.0;
+				float y = -2.0;
 				if(event.posX > 50)
 				{
-					y = 100.0;
+					y = 102.0;
 				}
 				
 				if ([event.teamId isEqualToString:data.team1.teamId])
@@ -504,7 +515,45 @@
 												 [SKAction moveTo:goalPoint duration:updateRate*10]]]];
 		}
 	}
-//	else if(event.eventType == 10) //saved
+	else if(event.eventType == 15) //saved shot
+	{
+		float x = 0;
+		float y = 0;
+		CGPoint eventPosition;
+		
+		for (EventQualifier* qualifier in event.qualifiers)
+		{
+			if (qualifier.qualifierId == 146) //x
+			{
+				y = [qualifier.value floatValue];
+			}
+			if( qualifier.qualifierId == 147) //y
+			{
+				x = [qualifier.value floatValue];
+			}
+		}
+		
+		if (x != 0 && y != 00)
+		{
+			if ([event.teamId isEqualToString:data.team1.teamId])
+			{
+				if (event.periodId == 1)
+					eventPosition = [self pointOnPitchWithX:x andY:y];
+				else
+					eventPosition = [self pointOnPitchWithX:100-x andY:100-y];
+			}
+			else
+			{
+				if (event.periodId == 1)
+					eventPosition = [self pointOnPitchWithX:100-x andY:100-y];
+				else
+					eventPosition = [self pointOnPitchWithX:x andY:y];
+			}
+			
+			[ball runAction:[SKAction moveTo:eventPosition duration:updateRate*10]];
+		}
+	}
+//	else if(event.eventType == 10) //goalkeeper save
 //	{
 //
 //		float x = 0.0;
@@ -618,7 +667,7 @@
 
 -(void)saveEvent:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:updateRate * 100];
+	//[self pauseGameFor:updateRate * 100];
 	
 	NSMutableString* eventDetails;
 	
@@ -632,6 +681,25 @@
 	}
 	
 	[self showEventDetailLabelWithString:eventDetails];
+	
+}
+
+-(void)keeperSaveEvent:(GameEvent*)nextEvent
+{
+	[self pauseGameFor:updateRate * 100];
+	
+//	NSMutableString* eventDetails;
+//	
+//	for(Player* player in data.playerList)
+//	{
+//		if([nextEvent.playerId isEqualToString:player.playerRef])
+//		{
+//			eventDetails = [NSMutableString stringWithFormat:@"%@ %@ %@", player.firstName, player.lastName, @"Shot Saved"];
+//			break;
+//		}
+//	}
+//	
+//	[self showEventDetailLabelWithString:eventDetails];
 	
 }
 
