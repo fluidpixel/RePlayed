@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5481758B19090B3B00ACDD2B /* playerBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5481758919090B3B00ACDD2B /* playerBlue@2x.png */; };
+		5481758C19090B3B00ACDD2B /* playerRed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5481758A19090B3B00ACDD2B /* playerRed@2x.png */; };
 		54E7779718F80AF900B8917E /* ball@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 54E7779618F80AF900B8917E /* ball@2x.png */; };
 		54F5092B18F494BF006A17E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54F5092A18F494BF006A17E8 /* Foundation.framework */; };
 		54F5092D18F494BF006A17E8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54F5092C18F494BF006A17E8 /* CoreGraphics.framework */; };
@@ -54,6 +56,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5481758919090B3B00ACDD2B /* playerBlue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "playerBlue@2x.png"; sourceTree = "<group>"; };
+		5481758A19090B3B00ACDD2B /* playerRed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "playerRed@2x.png"; sourceTree = "<group>"; };
 		54E7779618F80AF900B8917E /* ball@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ball@2x.png"; sourceTree = "<group>"; };
 		54F5092718F494BF006A17E8 /* RePlayed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RePlayed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		54F5092A18F494BF006A17E8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -247,6 +251,8 @@
 		54F5098318F5F281006A17E8 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				5481758919090B3B00ACDD2B /* playerBlue@2x.png */,
+				5481758A19090B3B00ACDD2B /* playerRed@2x.png */,
 				54E7779618F80AF900B8917E /* ball@2x.png */,
 				54F5098418F5F281006A17E8 /* pitch.png */,
 			);
@@ -330,10 +336,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				54F5094B18F494BF006A17E8 /* Spaceship.png in Resources */,
+				5481758C19090B3B00ACDD2B /* playerRed@2x.png in Resources */,
 				54F5096C18F4950A006A17E8 /* optaPlayers.xml in Resources */,
 				54F5096B18F4950A006A17E8 /* optaGame.xml in Resources */,
 				54F5094D18F494BF006A17E8 /* Images.xcassets in Resources */,
 				54F5098518F5F281006A17E8 /* pitch.png in Resources */,
+				5481758B19090B3B00ACDD2B /* playerBlue@2x.png in Resources */,
 				54F5094318F494BF006A17E8 /* Main_iPad.storyboard in Resources */,
 				54F5094018F494BF006A17E8 /* Main_iPhone.storyboard in Resources */,
 				54E7779718F80AF900B8917E /* ball@2x.png in Resources */,

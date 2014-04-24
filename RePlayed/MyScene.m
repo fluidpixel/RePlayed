@@ -27,7 +27,7 @@
 		loading.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));
 		[self addChild:loading];
 		
-		updateRate = 0.02;
+		updateRate = 0.1;
 		
 		SKSpriteNode* pitch = [SKSpriteNode spriteNodeWithImageNamed:@"pitch"];
 		pitch.size = CGSizeMake(self.size.width - 0, self.size.height - 120);
@@ -86,7 +86,7 @@
 	
 	[self showEventDetailLabelWithString:@"KICK OFF" andColor:[UIColor clearColor]];
 	
-	[self pauseGameFor:updateRate * 100];
+	[self pauseGameFor:updateRate * 50];
 	
 	[self setPlayerFormations];
 	
@@ -139,14 +139,14 @@
 				
 			}
 			
-			for(SKLabelNode* label in playerNode.children)
+			for(SKSpriteNode* playerSprite in playerNode.children)
 			{
-				if ([[label.userData objectForKey:@"playerRef"] isEqualToString:player.playerRef])
+				if ([[playerSprite.userData objectForKey:@"playerRef"] isEqualToString:player.playerRef])
 				{
-					[label removeAllActions];
-					[label setAlpha:1.0];
+					[playerSprite removeAllActions];
+					[playerSprite setAlpha:1.0];
 					
-					[label runAction:[SKAction sequence:@[[SKAction moveTo:point duration:updateRate * 10]]]];
+					[playerSprite runAction:[SKAction sequence:@[[SKAction moveTo:point duration:updateRate]]]];
 					
 					existingPlayer = true;
 					break;
@@ -155,21 +155,32 @@
 			
 			if (!existingPlayer) //if we haven't reset a player's position, then we need to create him
 			{
-				SKLabelNode* playerLabel = [SKLabelNode labelNodeWithFontNamed:@"Courier-Bold"];
-				playerLabel.text = player.shirtNumber;
-				playerLabel.fontSize = 12;
-				playerLabel.position = point;
-				playerLabel.name = @"playerLabel";
-				playerLabel.fontColor = player.team.teamColor;
+					NSString* playerImage = @"playerRed";
+					if ([player.team isEqual:data.team2])
+					{
+						playerImage = @"playerBlue";
+					}
+					
+					SKSpriteNode* playerSprite = [SKSpriteNode spriteNodeWithImageNamed:playerImage];
+					playerSprite.position = CGPointMake(point.x, point.y);
+					playerSprite.zPosition = 1;
+					
+					playerSprite.name = @"playerSprite";
+					NSMutableDictionary* dict = [[NSMutableDictionary alloc] initWithCapacity:1];
+					[playerSprite setUserData:dict];
+					[[playerSprite userData] setObject:player.playerRef forKey:@"playerRef"];
+					
+					SKLabelNode* playerLabel = [SKLabelNode labelNodeWithFontNamed:@"Courier-Bold"];
+					playerLabel.text = player.shirtNumber;
+					playerLabel.fontSize = 12;
+					//playerLabel.position = CGPointMake(point.x, point.y - playerLabel.fontSize/2);
+					playerLabel.name = @"playerLabel";
+					playerLabel.fontColor = player.team.teamColor;
+					
+					[playerSprite addChild:playerLabel];
+					[playerNode addChild:playerSprite];
 				
-				NSMutableDictionary* dict = [[NSMutableDictionary alloc] initWithCapacity:1];
-				[playerLabel setUserData:dict];
-				[[playerLabel userData] setObject:player.playerRef forKey:@"playerRef"];
-				
-				playerLabel.zPosition = 1;
-				[playerNode addChild:playerLabel];
-				
-				[playerLabel runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 200]]]];
+				[playerSprite runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 200]]]];
 			}
 		}
 	}
@@ -183,7 +194,7 @@
 	//pause timer for tempTimer time to "wait" for half time
 	if (runningTime == (45 * 60))
 	{
-		[self pauseGameFor:updateRate * 200];
+		[self pauseGameFor:updateRate * 100];
 		
 		//reset action grid
 		NSMutableArray* childrenToRemove = [NSMutableArray arrayWithArray:[actionLayer children]];
@@ -322,7 +333,7 @@
 		//Game restart events, so reset ball
 		if(currentGameEvent.eventType == 32 || currentGameEvent.eventType == 30)
 		{
-			[ball runAction:[SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:updateRate * 10]];
+			[ball runAction:[SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:updateRate]];
 		}
 		else if (currentGameEvent.eventType == 17)
 		{
@@ -456,15 +467,15 @@
 			
 			BOOL movedPlayer = false;
 			
-			for(SKLabelNode* label in playerNode.children)
+			for(SKSpriteNode* player in playerNode.children)
 			{
-				if ([[label.userData objectForKey:@"playerRef"] isEqualToString:playerRef])
+				if ([[player.userData objectForKey:@"playerRef"] isEqualToString:playerRef])
 				{
-					[label removeAllActions];
-					[label setAlpha:1.0];
-					[label runAction:[SKAction sequence:@[[SKAction moveTo:CGPointMake(point.x, point.y - label.fontSize/2) duration:updateRate * 10],
+					[player removeAllActions];
+					[player setAlpha:1.0];
+					[player runAction:[SKAction sequence:@[[SKAction moveTo:CGPointMake(point.x, point.y) duration:updateRate],
 														  [SKAction waitForDuration:updateRate * 200],
-														  [SKAction moveTo:playerFormationPoint duration:updateRate * 50]]]];
+														  [SKAction moveTo:playerFormationPoint duration:updateRate * 20]]]];
 					
 					movedPlayer = true;
 					break;
@@ -473,22 +484,33 @@
 			
 			if (!movedPlayer)
 			{
+				NSString* playerImage = @"playerRed";
+				if ([player.team isEqual:data.team2])
+				{
+					playerImage = @"playerBlue";
+				}
+				
+				SKSpriteNode* playerSprite = [SKSpriteNode spriteNodeWithImageNamed:playerImage];
+				playerSprite.position = CGPointMake(point.x, point.y);
+				playerSprite.zPosition = 1;
+				
+				playerSprite.name = @"playerSprite";
+				NSMutableDictionary* dict = [[NSMutableDictionary alloc] initWithCapacity:1];
+				[playerSprite setUserData:dict];
+				[[playerSprite userData] setObject:playerRef forKey:@"playerRef"];
+				
 				SKLabelNode* playerLabel = [SKLabelNode labelNodeWithFontNamed:@"Courier-Bold"];
 				playerLabel.text = playerNumber;
 				playerLabel.fontSize = 12;
-				playerLabel.position = CGPointMake(point.x, point.y - playerLabel.fontSize/2);
+				//playerLabel.position = CGPointMake(point.x, point.y - playerLabel.fontSize/2);
 				playerLabel.name = @"playerLabel";
 				playerLabel.fontColor = color;
 				
-				NSMutableDictionary* dict = [[NSMutableDictionary alloc] initWithCapacity:1];
-				[playerLabel setUserData:dict];
-				[[playerLabel userData] setObject:playerRef forKey:@"playerRef"];
+				[playerSprite addChild:playerLabel];
+				[playerNode addChild:playerSprite];
 				
-				playerLabel.zPosition = 1;
-				[playerNode addChild:playerLabel];
-				
-				[playerLabel runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 200],
-															[SKAction moveTo:playerFormationPoint duration:updateRate * 50]]]];
+				[playerSprite runAction:[SKAction sequence:@[[SKAction waitForDuration:updateRate * 100],
+															[SKAction moveTo:playerFormationPoint duration:updateRate * 20]]]];
 			}
 			
 			break;
@@ -555,18 +577,18 @@
 			}
 		}
 		
-		if (event.eventType == 16)
+		if (event.eventType == 16) //goal
 		{
 			[ball runAction:[SKAction sequence:@[
-												 [SKAction moveTo:point duration:updateRate*10],
-												 [SKAction moveTo:goalPoint duration:updateRate*10],[SKAction waitForDuration:updateRate*180],
+												 [SKAction moveTo:point duration:updateRate],
+												 [SKAction moveTo:goalPoint duration:updateRate],[SKAction waitForDuration:updateRate*180],
 												 [SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:0.0]]]];
 		}
 		else //miss
 		{
 			[ball runAction:[SKAction sequence:@[
-												 [SKAction moveTo:point duration:updateRate*10],
-												 [SKAction moveTo:goalPoint duration:updateRate*10]]]];
+												 [SKAction moveTo:point duration:updateRate],
+												 [SKAction moveTo:goalPoint duration:updateRate]]]];
 		}
 	}
 	else if(event.eventType == 15) //saved shot
@@ -604,7 +626,7 @@
 					eventPosition = [self pointOnPitchWithX:x andY:y];
 			}
 			
-			[ball runAction:[SKAction moveTo:eventPosition duration:updateRate*10]];
+			[ball runAction:[SKAction moveTo:eventPosition duration:updateRate]];
 		}
 	}
 //	else if(event.eventType == 10) //goalkeeper save
@@ -640,7 +662,7 @@
 			if(qualifier.qualifierId == 155)//in the air
 			{
 				[ball runAction:
-				 [SKAction group:@[[SKAction sequence:@[[SKAction scaleTo:2.0 duration:updateRate*10], [SKAction scaleTo:1.0 duration:updateRate*10]]], [SKAction moveTo:point duration:updateRate*20]]]];
+				 [SKAction group:@[[SKAction sequence:@[[SKAction scaleTo:2.0 duration:updateRate*0.5], [SKAction scaleTo:1.0 duration:updateRate*0.5]]], [SKAction moveTo:point duration:updateRate]]]];
 				inAir = TRUE;
 				break;
 				
@@ -648,7 +670,7 @@
 		}
 		if (!inAir)
 		{
-			[ball runAction:[SKAction moveTo:point duration:updateRate*10]];
+			[ball runAction:[SKAction moveTo:point duration:updateRate]];
 		}
 	}
 	
@@ -656,7 +678,7 @@
 
 -(void)scoredGoal:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:updateRate * 200];
+	[self pauseGameFor:updateRate * 100];
 	resetPlayers = true;
 	
 	if([nextEvent.teamId isEqualToString:data.team1.teamId])
@@ -694,7 +716,7 @@
 
 -(void)missedChance:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:updateRate * 100];
+	[self pauseGameFor:updateRate * 50];
 	
 	NSMutableString* eventDetails;
 	UIColor* color = [UIColor clearColor];
@@ -745,7 +767,7 @@
 
 -(void)keeperSaveEvent:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:updateRate * 100];
+	[self pauseGameFor:updateRate * 50];
 	
 //	NSMutableString* eventDetails;
 //	
