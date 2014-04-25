@@ -28,6 +28,7 @@
 	SKSpriteNode* ball;
 	
 	float updateRate;
+	float playerSize;
 	
 	SKNode* actionLayer;
 }

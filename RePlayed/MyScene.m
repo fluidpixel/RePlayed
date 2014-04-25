@@ -28,10 +28,13 @@
 		[self addChild:loading];
 		
 		updateRate = 0.1;
+		playerSize = 10.0;
 		
 		SKSpriteNode* pitch = [SKSpriteNode spriteNodeWithImageNamed:@"pitch"];
-		pitch.size = CGSizeMake(self.size.width - 0, self.size.height - 120);
-		pitch.position = CGPointMake(0, 10);
+		//pitch.size = CGSizeMake(self.size.width - 0, self.size.height - 120);
+		pitch.size = CGSizeMake(320.0, 671.0);
+		
+		pitch.position = CGPointMake(0, 20);
 		pitch.anchorPoint = CGPointZero;
 		pitch.zPosition = -1;
 		[self addChild:pitch];
@@ -172,10 +175,10 @@
 					
 					SKLabelNode* playerLabel = [SKLabelNode labelNodeWithFontNamed:@"Courier-Bold"];
 					playerLabel.text = player.shirtNumber;
-					playerLabel.fontSize = 12;
-					//playerLabel.position = CGPointMake(point.x, point.y - playerLabel.fontSize/2);
+					playerLabel.fontSize = 10;
+					playerLabel.position = CGPointMake(0, -playerLabel.fontSize/2);
 					playerLabel.name = @"playerLabel";
-					playerLabel.fontColor = player.team.teamColor;
+					playerLabel.fontColor = [UIColor whiteColor];//player.team.teamColor;
 					
 					[playerSprite addChild:playerLabel];
 					[playerNode addChild:playerSprite];
@@ -412,7 +415,7 @@
 		[[actionArray objectAtIndex:1] removeFromParent];
 	}
 	
-	[actionLayer addChild:actionPoint];
+	//[actionLayer addChild:actionPoint];
 }
 
 -(void)addPlayer:(NSString*)playerId atPoint:(CGPoint)point withColor:(UIColor*)color
@@ -421,6 +424,7 @@
 	NSString* playerNumber;
 	NSString* playerRef;
 	SKNode* playerNode = [actionLayer childNodeWithName:@"players"];
+		
 	if(!playerNode)
 	{
 		playerNode = [[SKNode alloc] init];
@@ -444,10 +448,12 @@
 				if (currentGameEvent.periodId == 1)
 				{
 					playerFormationPoint = [self pointOnPitchWithX:playerPosition.x andY:playerPosition.y];
+					point = CGPointMake(point.x, point.y - playerSize);
 				}
 				else
 				{
 					playerFormationPoint = [self pointOnPitchWithX:100-playerPosition.x andY:100-playerPosition.y];
+					point = CGPointMake(point.x, point.y + playerSize);
 				}
 			}
 			else
@@ -456,10 +462,12 @@
 				if (currentGameEvent.periodId == 1)
 				{
 					playerFormationPoint = [self pointOnPitchWithX:100 - playerPosition.x andY:100 - playerPosition.y];
+					point = CGPointMake(point.x, point.y + playerSize);
 				}
 				else
 				{
 					playerFormationPoint = [self pointOnPitchWithX:playerPosition.x andY:playerPosition.y];
+					point = CGPointMake(point.x, point.y - playerSize);
 				}
 				
 				
@@ -502,9 +510,9 @@
 				SKLabelNode* playerLabel = [SKLabelNode labelNodeWithFontNamed:@"Courier-Bold"];
 				playerLabel.text = playerNumber;
 				playerLabel.fontSize = 12;
-				//playerLabel.position = CGPointMake(point.x, point.y - playerLabel.fontSize/2);
+				playerLabel.position = CGPointMake(0, 0 - playerLabel.fontSize/2);
 				playerLabel.name = @"playerLabel";
-				playerLabel.fontColor = color;
+				playerLabel.fontColor = [UIColor whiteColor];
 				
 				[playerSprite addChild:playerLabel];
 				[playerNode addChild:playerSprite];
@@ -580,14 +588,14 @@
 		if (event.eventType == 16) //goal
 		{
 			[ball runAction:[SKAction sequence:@[
-												 [SKAction moveTo:point duration:updateRate],
-												 [SKAction moveTo:goalPoint duration:updateRate],[SKAction waitForDuration:updateRate*180],
+												 [SKAction moveTo:point duration:updateRate*1.2],
+												 [SKAction moveTo:goalPoint duration:updateRate],[SKAction waitForDuration:updateRate*50],
 												 [SKAction moveTo:[self pointOnPitchWithX:50.0 andY:50.0] duration:0.0]]]];
 		}
 		else //miss
 		{
 			[ball runAction:[SKAction sequence:@[
-												 [SKAction moveTo:point duration:updateRate],
+												 [SKAction moveTo:point duration:updateRate*1.2],
 												 [SKAction moveTo:goalPoint duration:updateRate]]]];
 		}
 	}
@@ -626,7 +634,7 @@
 					eventPosition = [self pointOnPitchWithX:x andY:y];
 			}
 			
-			[ball runAction:[SKAction moveTo:eventPosition duration:updateRate]];
+			[ball runAction:[SKAction moveTo:eventPosition duration:updateRate*1.2]];
 		}
 	}
 //	else if(event.eventType == 10) //goalkeeper save
@@ -662,7 +670,7 @@
 			if(qualifier.qualifierId == 155)//in the air
 			{
 				[ball runAction:
-				 [SKAction group:@[[SKAction sequence:@[[SKAction scaleTo:2.0 duration:updateRate*0.5], [SKAction scaleTo:1.0 duration:updateRate*0.5]]], [SKAction moveTo:point duration:updateRate]]]];
+				 [SKAction group:@[[SKAction sequence:@[[SKAction scaleTo:2.0 duration:updateRate*0.6], [SKAction scaleTo:1.0 duration:updateRate*0.6]]], [SKAction moveTo:point duration:updateRate*1.2]]]];
 				inAir = TRUE;
 				break;
 				
@@ -670,7 +678,7 @@
 		}
 		if (!inAir)
 		{
-			[ball runAction:[SKAction moveTo:point duration:updateRate]];
+			[ball runAction:[SKAction moveTo:point duration:updateRate * 1.2]];
 		}
 	}
 	
@@ -678,7 +686,7 @@
 
 -(void)scoredGoal:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:updateRate * 100];
+	[self pauseGameFor:updateRate * 50];
 	resetPlayers = true;
 	
 	if([nextEvent.teamId isEqualToString:data.team1.teamId])
@@ -716,7 +724,7 @@
 
 -(void)missedChance:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:updateRate * 50];
+	[self pauseGameFor:updateRate * 20];
 	
 	NSMutableString* eventDetails;
 	UIColor* color = [UIColor clearColor];
@@ -767,7 +775,7 @@
 
 -(void)keeperSaveEvent:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:updateRate * 50];
+	[self pauseGameFor:updateRate * 20];
 	
 //	NSMutableString* eventDetails;
 //	
@@ -786,7 +794,7 @@
 
 -(void)foulEvent:(GameEvent*)nextEvent
 {
-	[self pauseGameFor:updateRate * 50];
+	[self pauseGameFor:updateRate * 20];
 	
 	NSMutableString* eventDetails;
 	UIColor* color = [UIColor clearColor];
@@ -822,7 +830,7 @@
 -(void)showEventDetailLabelWithString:(NSString*)string andColor:(UIColor*)color
 {
 	SKSpriteNode* details = [self labelNodeFromString:string andSize:14];
-	details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height/2);
+	details.position = CGPointMake(self.size.width/2 - details.size.width/2, self.size.height-120);
 	details.name = @"eventLabel";
 	details.color = color;
 	details.zPosition = 5;
